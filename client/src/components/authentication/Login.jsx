@@ -1,4 +1,4 @@
-import { signInWithGoogle, handleRedirectResult } from "@/firebaseConfig";
+import { signInWithGoogle, handleRedirectResult } from "@/config/firebaseConfig";
 import { useRouter } from "next/router";
 import { Alert, Box, Button, FormControl, FormErrorMessage, FormLabel, Input } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
