@@ -1,0 +1,9 @@
+//configures ESLint rules
+{
+    "extends": ["next"],
+    "rules": {
+        "react-hooks/exhaustive-deps": "off"
+    }
+
+}
+  
