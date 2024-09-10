@@ -3,7 +3,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 
 // Zustand store to manage authentication state
 const useAuthStore = create(persist(
-    (set, _) => ({
+    (set) => ({
         accessToken: null,
         userProfile: null,
         setUserProfile: (userProfile) => set((state) => ({ ...state, userProfile })),

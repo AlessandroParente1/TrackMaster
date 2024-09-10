@@ -1,4 +1,4 @@
-import { signInWithGoogle, handleRedirectResult } from "@/config/firebaseConfig";
+import { signInWithGoogle, handleRedirectResult } from "/firebaseConfig";
 import { useRouter } from "next/router";
 import { Alert, Box, Button, FormControl, FormErrorMessage, FormLabel, Input } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
@@ -9,7 +9,7 @@ import useAuthStore from "@/hooks/useAuth";
 import { LoginData, LoginSchema } from "@/util/ValidationSchemas";
 
 // Main component for user login
-const Login = () => {
+export const Login = () => {
   // State to manage error messages
   const [error, seterror] = useState("");
 
@@ -27,8 +27,10 @@ const Login = () => {
 
   // Effect to handle the redirect result after Google sign-in
   useEffect(() => {
-    handleRedirectResult();
-  }, []);
+    if (authStore.userProfile) {
+      router.reload();
+    }
+  }, [authStore.userProfile]);
 
   // Effect to update the authentication store and reload the page after a successful login
   useEffect(() => {
@@ -65,63 +67,63 @@ const Login = () => {
   };
 
   return (
-      <Box
-          w={["full", "md"]} // Set width for responsive design
-          p={[8, 10]} // Padding for the container
-          mt={[10]} // Margin top for the container
-          mx="auto" // Center the container
-          borderRadius={10} // Rounded corners
-          boxShadow="md" // Shadow for the container
+    <Box
+      w={["full", "md"]} // Set width for responsive design
+      p={[8, 10]} // Padding for the container
+      mt={[10]} // Margin top for the container
+      mx="auto" // Center the container
+      borderRadius={10} // Rounded corners
+      boxShadow="md" // Shadow for the container
+    >
+      {/* Formik form for login */}
+      <Formik
+        initialValues={LoginData} // Initial values for the form fields
+        validationSchema={LoginSchema} // Validation schema for the form
+        onSubmit={onHandleFormSubmit} // Handle form submission
       >
-        {/* Formik form for login */}
-        <Formik
-            initialValues={LoginData} // Initial values for the form fields
-            validationSchema={LoginSchema} // Validation schema for the form
-            onSubmit={onHandleFormSubmit} // Handle form submission
-        >
-          {({ errors, touched }) => (
-              <Form>
-                {/* Display error message if there's an error */}
-                {error && (
-                    <Alert status="error" variant="left-accent" mb={2} fontSize="sm">
-                      {error}
-                    </Alert>
-                )}
+        {({ errors, touched }) => (
+          <Form>
+            {/* Display error message if there's an error */}
+            {error && (
+              <Alert status="error" variant="left-accent" mb={2} fontSize="sm">
+                {error}
+              </Alert>
+            )}
 
-                {/* Email input field with validation */}
-                <FormControl isInvalid={errors.email && touched.email}>
-                  <FormLabel>Email</FormLabel>
-                  <Field as={Input} name="email" type="email" />
-                  <FormErrorMessage>{errors.email}</FormErrorMessage>
-                </FormControl>
+            {/* Email input field with validation */}
+            <FormControl isInvalid={errors.email && touched.email}>
+              <FormLabel>Email</FormLabel>
+              <Field as={Input} name="email" type="email" />
+              <FormErrorMessage>{errors.email}</FormErrorMessage>
+            </FormControl>
 
-                {/* Password input field with validation */}
-                <FormControl mt={4} isInvalid={errors.password && touched.password}>
-                  <FormLabel>Password</FormLabel>
-                  <Field as={Input} name="password" type="password" />
-                  <FormErrorMessage>{errors.password}</FormErrorMessage>
-                </FormControl>
+            {/* Password input field with validation */}
+            <FormControl mt={4} isInvalid={errors.password && touched.password}>
+              <FormLabel>Password</FormLabel>
+              <Field as={Input} name="password" type="password" />
+              <FormErrorMessage>{errors.password}</FormErrorMessage>
+            </FormControl>
 
-                {/* Login button */}
-                <Button
-                    colorScheme="blue"
-                    w="full"
-                    mt={10}
-                    type="submit"
-                    isLoading={isLogging} // Show loading state if isLogging is true
-                    loadingText="Logging In"
-                >
-                  Login
-                </Button>
-              </Form>
-          )}
-        </Formik>
+            {/* Login button */}
+            <Button
+              colorScheme="blue"
+              w="full"
+              mt={10}
+              type="submit"
+              isLoading={isLogging} // Show loading state if isLogging is true
+              loadingText="Logging In"
+            >
+              Login
+            </Button>
+          </Form>
+        )}
+      </Formik>
 
-        {/* Google login button */}
-        <Button colorScheme="red" w="full" mt={4} onClick={handleGoogleLogin}>
-          Login with Google
-        </Button>
-      </Box>
+      {/* Google login button */}
+      <Button colorScheme="red" w="full" mt={4} onClick={handleGoogleLogin}>
+        Login with Google
+      </Button>
+    </Box>
   );
 };
 

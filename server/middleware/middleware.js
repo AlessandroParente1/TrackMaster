@@ -8,6 +8,7 @@ export const authMiddleware = async (req, res, next) => {
     if (token) {
         jwt.verify(token, process.env.SECRET_KEY, (error, decoded) => {  // Verifies the token using the secret key.
             if (error) {
+                console.log('Error verifying token:', error);
                 return res.status(500).json({ error });  // Returns an error if token verification fails.
             }
             //Check if the user exists
@@ -30,11 +31,12 @@ export const authMiddleware = async (req, res, next) => {
 
 
 
-export const handleError = async (error, req, res) => {
-    const statusCode = res.statusCode !== 200 ? res.statusCode : 500;  // Determines the appropriate status code for the response.
-    res.status(statusCode);
+export const handleError = (error, req, res, next) => {
+    const statusCode = res.statusCode !== 200 ? res.statusCode : 500;  // Determine the appropriate status code
+    res.status(statusCode);  // Set the response status
     res.json({
-        message: error.message  // Sends the error message in the response body.
+        message: error.message,  // Send the error message in the response body
+        stack: process.env.NODE_ENV === 'production' ? null : error.stack  // Include stack trace only in development
     });
 };
 

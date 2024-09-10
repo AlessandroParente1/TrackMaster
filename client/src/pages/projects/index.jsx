@@ -1,5 +1,4 @@
 import Head from "next/head";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { Button, Flex, Heading, Spacer, useDisclosure } from "@chakra-ui/react";
 import PermissionsRender from "@/components/others/PermissionsRender";
@@ -7,8 +6,8 @@ import Table from "@/components/others/Table";
 import AddProject from "@/components/projects/AddProject";
 import ProjectService from "@/services/project-service";
 import useApi from "@/hooks/useApi";
-import { PROJECTS_COLUMNS } from "../../util/TableDataDisplay";
-import { Permissions } from "../../util/Utils";
+import { PROJECTS_COLUMNS } from "@/util/TableDataDisplay";
+import { Permissions } from "@/util/Utils";
 
 // ViewAllProjects component to display all projects with an option to add new projects
 const ViewAllProjects = () => {
