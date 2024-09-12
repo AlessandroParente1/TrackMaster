@@ -3,7 +3,7 @@ services:
     name: nextjs-static
     runtime: static
     plan: starter
-    buildCommand: npm; npm build
+    buildCommand: yarn;yarn build
     startCommand: out
     autoDeploy: true
     envVars:
