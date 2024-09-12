@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: nextjs-static
+    runtime: static
+    plan: starter
+    buildCommand: npm; npm build
+    startCommand: out
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
