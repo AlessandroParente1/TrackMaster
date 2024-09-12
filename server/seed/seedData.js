@@ -2,20 +2,20 @@ import * as Permissions from "../util/constants.js";
 
 export const DBUsers = [
     {
-        firstName: "Ad",
-        lastName: "min",
+        firstName: "Admin",
+        lastName: "Admin",
         email: "admin@admin.com",
         password: "password"
     },
     {
-        firstName: "Dev",
-        lastName: "eloper",
+        firstName: "Developer",
+        lastName: "Developer",
         email: "developer@developer.com",
         password: "password"
     },
     {
-        firstName: "Sub",
-        lastName: "mitter",
+        firstName: "Submitter",
+        lastName: "Submitter",
         email: "submitter@submitter.com",
         password: "password"
     }

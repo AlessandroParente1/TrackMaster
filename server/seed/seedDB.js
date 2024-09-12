@@ -35,38 +35,35 @@ const populate = async () => {
         throw error;
     }
 };
-// Function to seed the database
 const seedDatabase = async () => {
     try {
-        // Check if not connected to the database, then connect
         if (mongoose.connection?.readyState === 0) {
             await mongoose.connect(MONGO_DB_CONNECTION);
         }
 
-        // If connected, clear the existing database
         if (mongoose.connection?.readyState === 1) {
             console.log('❌ Clearing database...');
-            mongoose.connection.dropDatabase(); // Clears all data from the database
+            mongoose.connection.dropDatabase();
         }
         else {
             return console.log("Unable to connect to DB");
         }
 
+
+
+
         console.log('🌱 Seeding database...');
 
-        // Populate the database with seed data
         await populate();
 
-        // Delay to ensure data is populated before closing connection
         setTimeout(() => {
             console.log('✅ Seeding successful');
-            mongoose.connection.close(); // Close the database connection
+            mongoose.connection.close();
         }, 5000);
     } catch (error) {
-        return console.log(error); // Handle any errors that occur during the seeding process
+        return console.log(error);
     }
 };
-
 
 
 await seedDatabase();

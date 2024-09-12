@@ -7,6 +7,7 @@ import bcrypt from 'bcrypt';
 
 const getHashedPassword = async () => {
     const hasedPasswordPromises = DBUsers.map(user => bcrypt.hash(user.password, +process.env.PASSWORD_SALT));
+
     return Promise.all(hasedPasswordPromises);
 };
 
@@ -14,6 +15,7 @@ const seedUsers = async (role, hashedPasswords) => {
     const usersPromises = DBUsers.map((user, index) => {
         return User.create({ ...user, password: hashedPasswords[index], roleId: role[index]._id });
     });
+
     return usersPromises;
 };
 
@@ -26,11 +28,11 @@ const populate = async () => {
             const hashedPasswords = await getHashedPassword();
             await seedUsers(role, hashedPasswords);
         });
+
     } catch (error) {
         throw error;
     }
 };
-
 export const seedDatabase = async () => {
     try {
         if (mongoose.connection?.readyState === 1) {
@@ -39,6 +41,7 @@ export const seedDatabase = async () => {
         }
 
         console.log('🌱 Seeding database...');
+
 
         setTimeout(() => {
             console.log('✅ Seeding successful');

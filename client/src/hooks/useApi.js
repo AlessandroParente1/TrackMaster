@@ -1,12 +1,13 @@
-import AuthService from "@/services/auth-service";
 import axios from "axios";
 import useSWR from "swr";
 import useAuthStore from "./useAuth";
 
 // Axios instance with base URL
+
 const API = axios.create({ baseURL: process.env.NEXT_PUBLIC_API_ENDPOINT });
 
 // Interceptor to add access token to request headers
+
 API.interceptors.request.use((req) => {
     const accessToken = useAuthStore.getState().accessToken;
 
@@ -16,17 +17,20 @@ API.interceptors.request.use((req) => {
     return req;
 });
 
-// Custom hook to handle API requests with SWR
+
 const useApi = (apiRequestInfo, shouldFetch = true, revalidateIfStale = true) => {
+
     let key = "";
     let fetcher = () => null;
 
     if (apiRequestInfo) {
-        key = apiRequestInfo.method + "-" + apiRequestInfo.url; // Unique key for SWR cache
+        key = apiRequestInfo.method + "-" + apiRequestInfo.url; //getApiRequestInfo is a function and name will be used as unique key
         fetcher = () => api(apiRequestInfo);
-    } else {
+    }
+    else {
         key = "api-request";
     }
+
 
     const swr = useSWR(shouldFetch ? key : null, fetcher, {
         shouldRetryOnError: false,
@@ -35,13 +39,11 @@ const useApi = (apiRequestInfo, shouldFetch = true, revalidateIfStale = true) =>
         revalidateIfStale
     });
 
-    // API request function
     const api = async (requestInfo) => {
         const res = await API(requestInfo);
         return res.data;
     };
 
-    // Function to mutate server-side data
     const mutateServer = async (mutationApiRequestInfo) => {
         try {
             await swr.mutate(getMutation(mutationApiRequestInfo, swr.data), getMutationOptions(mutationApiRequestInfo, swr.data));
@@ -51,7 +53,6 @@ const useApi = (apiRequestInfo, shouldFetch = true, revalidateIfStale = true) =>
         }
     };
 
-    // Function to get mutation options for SWR
     const getMutationOptions = (mutationApiRequestInfo, oldData) => {
         let optimisticData;
         const mutateData = mutationApiRequestInfo.data;
@@ -60,15 +61,18 @@ const useApi = (apiRequestInfo, shouldFetch = true, revalidateIfStale = true) =>
         switch (mutationApiRequestInfo.method) {
             case "post":
                 optimisticData = isArray ? [mutateData, ...oldData] : mutateData;
-                break;
             case "patch":
                 optimisticData = isArray ? oldData.map(data => data._id === mutateData._id ? mutateData : data) : mutateData;
-                break;
             case "delete":
+                //the array splitUrl contains the path of the url.
+                // Ex: If mutationApiRequestInfo.url is "/projects/123/tickets":
+                // splitUrl will be ["", "projects", "123", "tickets"]
+
                 const splitUrl = mutationApiRequestInfo.url.split("/");
                 const id = splitUrl.pop();
+                //mutateData holds the data that is either being added, updated, or deleted, and is used in optimistic updates to immediately reflect changes in the UI
+
                 optimisticData = isArray ? oldData.filter(data => data._id !== id) : mutateData;
-                break;
             default:
                 optimisticData = oldData;
         }
@@ -81,7 +85,6 @@ const useApi = (apiRequestInfo, shouldFetch = true, revalidateIfStale = true) =>
         };
     };
 
-    // Function to handle data mutation
     const getMutation = async (mutationApiRequestInfo, oldData) => {
         const responseData = await api(mutationApiRequestInfo);
         const isArray = Array.isArray(oldData);
@@ -98,6 +101,7 @@ const useApi = (apiRequestInfo, shouldFetch = true, revalidateIfStale = true) =>
             default:
                 return oldData;
         }
+
     };
 
     return { ...swr, mutateServer };

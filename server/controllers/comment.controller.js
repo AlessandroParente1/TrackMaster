@@ -42,6 +42,7 @@ export const updateComment = async (req, res) => {
     const { text } = req.body;
 
     try {
+
         let updatedComment = await Comment.findOneAndUpdate({ _id: commentId }, { text, updatedOn: Date.now() });
         updatedComment = await updatedComment.populate([
             { path: "userId", select: { firstName: 1, lastName: 1 } }
@@ -67,3 +68,7 @@ export const deleteComment = async (req, res) => {
         return res.status(500).json({ message: "Internal server issue" });
     }
 };
+
+
+
+

@@ -1,6 +1,5 @@
 import useAuthStore from "@/hooks/useAuth";
 
-// Service to manage API requests related to tickets
 const getUserTickets = () => {
     const userProfile = useAuthStore.getState().userProfile;
     return {
@@ -45,6 +44,7 @@ const deleteTicket = (ticketId) => {
         url: `/ticket/${ticketId}`
     };
 };
+
 
 const TicketService = {
     getProjectTickets,

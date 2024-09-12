@@ -15,7 +15,7 @@ export const theme = extendTheme({
                 fontFamily: `"Roboto", "Sans-sarif", "Times New Roman"`,
             },
             "html, body": {
-                backgroundColor: "#182130",
+                backgroundColor: "#0f1121",
                 maxHeight: "100vh",
                 height: "100vh",
                 overflowY: "hidden",
@@ -23,10 +23,10 @@ export const theme = extendTheme({
         },
     },
     colors: {
-        primary: "#182130",
-        secondary: "#151c29",
-        hover: "#435572",
-        inputLabel: "#A0AEC0",
+        primary: "#0f1121",
+        secondary: "#1b1f3d",
+        hover: "#474d7a",
+        inputLabel: "#e1e3f0",
     },
     components: {
         Button: {
@@ -68,7 +68,7 @@ export const theme = extendTheme({
                         maxWidth: "70%",
                         maxHeight: "85%",
                         minHeight: "85%",
-                        backgroundColor: "#182130",
+                        backgroundColor: "#0f1121",
                     },
                     body: {
                         overflowY: "auto",
@@ -78,7 +78,7 @@ export const theme = extendTheme({
                     dialog: {
                         minWidth: "40%",
                         minHeight: "50%",
-                        backgroundColor: "#182130",
+                        backgroundColor: "#0f1121",
                     },
                     body: {
                         overflowY: "auto",

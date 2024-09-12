@@ -33,14 +33,13 @@ import Table from "../others/Table";
 import CommentSection from "./CommentSection";
 import TicketInfo from "./TicketInfo";
 
-// CreateTicket component for creating and editing tickets
 const CreateTicket = ({
-                        isOpen,
-                        onClose,
-                        ticket,
-                        mutateServer,
-                        projectInfo,
-                      }) => {
+  isOpen,
+  onClose,
+  ticket,
+  mutateServer,
+  projectInfo,
+}) => {
   const isNewTicket = ticket ? false : true;
 
   const [selectedAssigneeIds, setSelectedAssigneeIds] = useState([]);
@@ -50,8 +49,8 @@ const CreateTicket = ({
   const [project, setProject] = useState(projectInfo);
 
   const projectSWR = useApi(
-      ProjectService.getProjectInfo(ticket?.projectId._id),
-      !projectInfo && ticket
+    ProjectService.getProjectInfo(ticket?.projectId._id),
+    !projectInfo && ticket
   );
 
   const canManageTickets = usePermissions(Permissions.canManageTickets);
@@ -80,12 +79,10 @@ const CreateTicket = ({
     }
   }, [isOpen]);
 
-  // Handle assignee selection changes
   const onTicketAssigneeClick = ({ selected }) => {
     setSelectedAssigneeIds(Object.keys(selected));
   };
 
-  // Handle ticket deletion
   const onTicketDelete = async () => {
     alertModalDisclosure.onClose();
 
@@ -101,6 +98,7 @@ const CreateTicket = ({
   };
 
   // Reset modal state and close it
+
   const closeTicketModal = () => {
     setSelectedAssigneeIds([]);
     setTicketDescription("");
@@ -109,7 +107,6 @@ const CreateTicket = ({
     onClose();
   };
 
-  // Handle form submission to create or update a ticket
   const onHandleFormSubmit = async (data) => {
     try {
       const ticketData = { ...data };
@@ -132,107 +129,107 @@ const CreateTicket = ({
   };
 
   return (
-      <Modal
-          closeOnOverlayClick={false}
-          isOpen={isOpen}
-          onClose={closeTicketModal}
-          size="lg"
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>
-            <Heading as="h3" size="md">
-              {!isNewTicket ? "Edit" : "Create"} Ticket
-            </Heading>
-            <Text fontSize="sm" as="i" fontWeight={400} mt={2}>
-              Project: {project?.title}
-            </Text>
-          </ModalHeader>
+    <Modal
+      closeOnOverlayClick={false}
+      isOpen={isOpen}
+      onClose={closeTicketModal}
+      size="lg"
+    >
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>
+          <Heading as="h3" size="md">
+            {!isNewTicket ? "Edit" : "Create"} Ticket
+          </Heading>
+          <Text fontSize="sm" as="i" fontWeight={400} mt={2}>
+            Project: {project?.title}
+          </Text>
+        </ModalHeader>
 
-          <ModalCloseButton onClick={closeTicketModal} />
+        <ModalCloseButton onClick={closeTicketModal} />
 
-          <ModalBody overflowY="auto" mt={-3}>
-            <Tabs variant="enclosed" size="sm" colorScheme="blue">
-              <TabList>
-                <Tab>Ticket Info</Tab>
-                {!isNewTicket && <Tab>Comments</Tab>}
-                <Tab>Assignees</Tab>
-              </TabList>
+        <ModalBody overflowY="auto" mt={-3}>
+          <Tabs variant="enclosed" size="sm" colorScheme="blue">
+            <TabList>
+              <Tab>Ticket Info</Tab>
+              {!isNewTicket && <Tab>Comments</Tab>}
+              <Tab>Assignees</Tab>
+            </TabList>
 
-              {error && (
-                  <Alert status="error" variant="left-accent" mb={2} fontSize="sm">
-                    <AlertIcon />
-                    {error}
-                  </Alert>
+            {error && (
+              <Alert status="error" variant="left-accent" mb={2} fontSize="sm">
+                <AlertIcon />
+                {error}
+              </Alert>
+            )}
+
+            <TabPanels>
+              <TabPanel>
+                <TicketInfo
+                  ticketInfo={ticketInfo}
+                  onHandleFormSubmit={onHandleFormSubmit}
+                  formRef={formRef}
+                  error={error}
+                  ticketDescription={ticketDescription}
+                  setTicketDescription={setTicketDescription}
+                />
+              </TabPanel>
+
+              {!isNewTicket && (
+                <TabPanel>
+                  <CommentSection ticketId={ticket ? ticket._id : null} />
+                </TabPanel>
               )}
 
-              <TabPanels>
-                <TabPanel>
-                  <TicketInfo
-                      ticketInfo={ticketInfo}
-                      onHandleFormSubmit={onHandleFormSubmit}
-                      formRef={formRef}
-                      error={error}
-                      ticketDescription={ticketDescription}
-                      setTicketDescription={setTicketDescription}
-                  />
-                </TabPanel>
+              <TabPanel>
+                <Table
+                  tableData={project?.assignees}
+                  columns={PROJECT_ASSIGNEES_COLUMNS}
+                  searchPlaceholder={"Search for users"}
+                  height={300}
+                  hasCheckboxColumn={true}
+                  sortable={false}
+                  selectedRowIds={selectedAssigneeIds}
+                  onSelectionChange={onTicketAssigneeClick}
+                  disableCheckBox={!canManageTickets}
+                />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </ModalBody>
 
-                {!isNewTicket && (
-                    <TabPanel>
-                      <CommentSection ticketId={ticket ? ticket._id : null} />
-                    </TabPanel>
-                )}
-
-                <TabPanel>
-                  <Table
-                      tableData={project?.assignees}
-                      columns={PROJECT_ASSIGNEES_COLUMNS}
-                      searchPlaceholder={"Search for users"}
-                      height={300}
-                      hasCheckboxColumn={true}
-                      sortable={false}
-                      selectedRowIds={selectedAssigneeIds}
-                      onSelectionChange={onTicketAssigneeClick}
-                      disableCheckBox={!canManageTickets}
-                  />
-                </TabPanel>
-              </TabPanels>
-            </Tabs>
-          </ModalBody>
-
-          <PermissionsRender permissionCheck={Permissions.canManageTickets}>
-            <ModalFooter>
+        <PermissionsRender permissionCheck={Permissions.canManageTickets}>
+          <ModalFooter>
+            <Button
+              colorScheme="blue"
+              type="submit"
+              mr={3}
+              onClick={() => formRef.current?.handleSubmit()}
+            >
+              {!isNewTicket ? "Save" : "Create"}
+            </Button>
+            {!isNewTicket ? (
               <Button
-                  colorScheme="blue"
-                  type="submit"
-                  mr={3}
-                  onClick={() => formRef.current?.handleSubmit()}
+                colorScheme="red"
+                onClick={() => alertModalDisclosure.onOpen()}
               >
-                {!isNewTicket ? "Save" : "Create"}
+                Delete
               </Button>
-              {!isNewTicket ? (
-                  <Button
-                      colorScheme="red"
-                      onClick={() => alertModalDisclosure.onOpen()}
-                  >
-                    Delete
-                  </Button>
-              ) : (
-                  <Button onClick={closeTicketModal}>Cancel</Button>
-              )}
-            </ModalFooter>
-          </PermissionsRender>
-        </ModalContent>
+            ) : (
+              <Button onClick={closeTicketModal}>Cancel</Button>
+            )}
+          </ModalFooter>
+        </PermissionsRender>
+      </ModalContent>
 
-        <AlertModal
-            title="Delete ticket"
-            body="Are you sure you to delete this ticket?"
-            isOpen={alertModalDisclosure.isOpen}
-            onClose={alertModalDisclosure.onClose}
-            onCTA={onTicketDelete}
-        />
-      </Modal>
+      <AlertModal
+        title="Delete ticket"
+        body="Are you sure you to delete this ticket?"
+        isOpen={alertModalDisclosure.isOpen}
+        onClose={alertModalDisclosure.onClose}
+        onCTA={onTicketDelete}
+      />
+    </Modal>
   );
 };
 

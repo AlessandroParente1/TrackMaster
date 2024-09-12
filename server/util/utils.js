@@ -3,34 +3,32 @@ import Role from "../models/role.model.js";
 import * as Constants from './constants.js';
 
 export const getUserRole = async (roleId) => {
-    try {
-        const role = await Role.findOne({ _id: roleId });  // Queries the database to find a role document by its `_id`.
 
-        if (!role)  // If no role is found, an error is thrown.
+    try {
+        const role = await Role.findOne({ _id: roleId });
+
+        if (!role)
             throw "Role not found";
 
-        return role;  // If a role is found, it is returned.
+        return role;
     } catch (error) {
-        console.error(error);  // If an error occurs (e.g., role not found), it is logged to the console.
+        console.error(error);
     }
 };
-
 
 
 export const canPerformAction = async (permissionCheck, user) => {
-    const roleId = user.roleId;  // Retrieves the `roleId` from the `user` object.
-    const roleObject = await getUserRole(roleId);  // Calls `getUserRole` to get the role object based on `roleId`.
+    const roleId = user.roleId;
+    const roleObject = await getUserRole(roleId);
 
-    return permissionCheck(roleObject.permissions);  // Checks if the role's permissions include the required permission using the provided `permissionCheck` function.
+    return permissionCheck(roleObject.permissions);
 };
-
 
 export const validateObjectId = (id, message, res) => {
-    if (!mongoose.Types.ObjectId.isValid(id)) {  // Checks if the `id` is a valid MongoDB ObjectId.
-        return res.status(403).json({ message });  // If not valid, it sends a 403 status code with the provided `message`.
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(403).json({ message });
     }
 };
-
 
 
 

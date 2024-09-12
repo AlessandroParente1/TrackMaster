@@ -11,9 +11,9 @@ export const MANAGE_ADMIN_PAGE = "PERMISSION_MANAGE_ADMIN_PAGE";
 // export const MANAGE_ROLE = "PERMISSION_MANAGE_ROLE";
 // export const UPDATE_USER_PROFILE = "PERMISSION_UPDATE_USER_PROFILE";
 
-export const DEFINED_ROLES = ["Admin", "Project Manager", "Developer", "Submitter"];
+//export const DEFINED_ROLES = ["Admin", "Project Manager", "Developer", "Submitter"];
 
-export const BS_ICONS = Object.keys(BsIcons).map(icon => { return { name: icon, icon: <Icon key={icon} as={BsIcons[icon]} w={6} h={6} /> }; });
+//export const BS_ICONS = Object.keys(BsIcons).map(icon => { return { name: icon, icon: <Icon key={icon} as={BsIcons[icon]} w={6} h={6} /> }; });
 
 export const DEMO_LOGIN_INFO = [
     {

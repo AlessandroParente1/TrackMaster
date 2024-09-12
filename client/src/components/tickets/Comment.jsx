@@ -16,13 +16,11 @@ import {
 import moment from "moment";
 import React, { useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import AuthService from "@/services/auth-service";
 import CommentService from "@/services/comment-service";
 import useAuthStore from "@/hooks/useAuth";
 import { Permissions, getUserFullname } from "@/util/Utils";
 import PermissionsRender from "../others/PermissionsRender";
 
-// Comment component to display and manage individual comments
 const Comment = ({ mutateServer, commentData, setError }) => {
   const useAuth = useAuthStore();
   const [isEditing, setisEditing] = useState(false);
@@ -33,7 +31,6 @@ const Comment = ({ mutateServer, commentData, setError }) => {
   const isMyComment = commentData.userId._id === signedInUserId;
   const isCommentEdited = commentData.createdOn !== commentData.updatedOn;
 
-  // Function to handle saving an edited comment
   const onCommentEditSaveClick = async () => {
     setisEditing((prev) => !prev);
     onClose();
@@ -41,9 +38,9 @@ const Comment = ({ mutateServer, commentData, setError }) => {
     if (isEditing) {
       try {
         await mutateServer(
-            CommentService.updateTicketComment(commentData._id, {
-              text: comment,
-            })
+          CommentService.updateTicketComment(commentData._id, {
+            text: comment,
+          })
         );
         onClose();
         setError("");
@@ -53,7 +50,6 @@ const Comment = ({ mutateServer, commentData, setError }) => {
     }
   };
 
-  // Function to handle deleting a comment
   const onCommentDeleteClick = async () => {
     try {
       onClose();
@@ -64,6 +60,7 @@ const Comment = ({ mutateServer, commentData, setError }) => {
   };
 
   // Function to format the comment's timestamp
+
   const getCommentDateTime = () => {
     const now = moment();
     const end = moment(commentData.updatedOn);
@@ -78,63 +75,63 @@ const Comment = ({ mutateServer, commentData, setError }) => {
   };
 
   return (
-      <Box
-          display="flex"
-          alignItems="center"
-          gap={3}
-          p={3}
-          boxShadow="xs"
-          width="100%"
-      >
-        <Avatar name={getUserFullname(commentData.userId)} size="sm" />
-        <Flex direction="column" width="100%">
-          <Flex gap={3}>
-            <Text fontSize="sm" as="b">
-              {getUserFullname(commentData.userId)}
-            </Text>
-            <Text fontSize="sm" color="gray" align="right">
-              {getCommentDateTime()} {isCommentEdited ? "(Edited)" : ""}
-            </Text>
-          </Flex>
-          {isEditing ? (
-              <Input
-                  name="comment"
-                  value={comment}
-                  onChange={(e) => setcomment(e.target.value)}
-              />
-          ) : (
-              <Text fontSize="sm">{comment}</Text>
-          )}
-          <Spacer />
+    <Box
+      display="flex"
+      alignItems="center"
+      gap={3}
+      p={3}
+      boxShadow="xs"
+      width="100%"
+    >
+      <Avatar name={getUserFullname(commentData.userId)} size="sm" />
+      <Flex direction="column" width="100%">
+        <Flex gap={3}>
+          <Text fontSize="sm" as="b">
+            {getUserFullname(commentData.userId)}
+          </Text>
+          <Text fontSize="sm" color="gray" align="right">
+            {getCommentDateTime()} {isCommentEdited ? "(Edited)" : ""}
+          </Text>
         </Flex>
+        {isEditing ? (
+          <Input
+            name="comment"
+            value={comment}
+            onChange={(e) => setcomment(e.target.value)}
+          />
+        ) : (
+          <Text fontSize="sm">{comment}</Text>
+        )}
+        <Spacer />
+      </Flex>
 
-        <PermissionsRender permissionCheck={Permissions.canManageTickets}>
-          {isMyComment ? (
-              <Popover isOpen={isOpen}>
-                <PopoverTrigger>
-                  <IconButton
-                      aria-label="Edit comment"
-                      variant="link"
-                      onClick={onToggle}
-                      icon={<BsThreeDotsVertical />}
-                  />
-                </PopoverTrigger>
-                <PopoverContent w="fit-content">
-                  <PopoverBody>
-                    <Flex direction="column" alignItems="start">
-                      <Button variant="link" onClick={onCommentEditSaveClick}>
-                        {isEditing ? "Save" : "Edit"}
-                      </Button>
-                      <Button variant="link" onClick={onCommentDeleteClick}>
-                        Delete
-                      </Button>
-                    </Flex>
-                  </PopoverBody>
-                </PopoverContent>
-              </Popover>
-          ) : null}
-        </PermissionsRender>
-      </Box>
+      <PermissionsRender permissionCheck={Permissions.canManageTickets}>
+        {isMyComment ? (
+          <Popover isOpen={isOpen}>
+            <PopoverTrigger>
+              <IconButton
+                aria-label="Edit comment"
+                variant="link"
+                onClick={onToggle}
+                icon={<BsThreeDotsVertical />}
+              />
+            </PopoverTrigger>
+            <PopoverContent w="fit-content">
+              <PopoverBody>
+                <Flex direction="column" alignItems="start">
+                  <Button variant="link" onClick={onCommentEditSaveClick}>
+                    {isEditing ? "Save" : "Edit"}
+                  </Button>
+                  <Button variant="link" onClick={onCommentDeleteClick}>
+                    Delete
+                  </Button>
+                </Flex>
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
+        ) : null}
+      </PermissionsRender>
+    </Box>
   );
 };
 

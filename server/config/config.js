@@ -1,15 +1,14 @@
 import dotenv from 'dotenv';
 
-dotenv.config();  // Load environment variables from a .env file
+dotenv.config();
 
 const Environment = {
     PRODUCTION: 'production',
     DEVELOPMENT: 'development',
 };
 
-//export const SECRET_KEY = process.env.SECRET_KEY;
-//export const PASSWORD_SALT = process.env.PASSWORD_SALT;
-//export const JWT_TOKEN_EXPIRATION = process.env.JWT_TOKEN_EXPIRATION;
+export const SECRET_KEY = process.env.SECRET_KEY;
+export const JWT_TOKEN_EXPIRATION = process.env.JWT_TOKEN_EXPIRATION;
 
 
 export const PORT = process.env.PORT || 5000;

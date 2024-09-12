@@ -1,4 +1,3 @@
-// Service to manage miscellaneous API requests related to users, roles, and ticket types
 import useAuthStore from "@/hooks/useAuth";
 
 const updateUserProfile = (data) => {
@@ -32,6 +31,7 @@ const createUser = (data) => {
     };
 };
 
+
 const getAllTicketType = () => {
     return {
         url: "/ticketType",
@@ -46,6 +46,7 @@ const createTicketType = (data) => {
         data
     };
 };
+
 
 const updateTicketType = (data) => {
     return {

@@ -1,4 +1,3 @@
-// Service to manage API requests related to comments
 const getTicketComments = (ticketId) => {
     return {
         url: `/comment/${ticketId}`,
@@ -12,6 +11,7 @@ const createTicketComment = (ticketId, ticketData) => {
         method: "post",
         data: ticketData
     };
+
 };
 
 const updateTicketComment = (commentId, ticketData) => {
@@ -20,6 +20,7 @@ const updateTicketComment = (commentId, ticketData) => {
         method: "patch",
         data: ticketData
     };
+
 };
 
 const deleteTicketComment = (commentId) => {

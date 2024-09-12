@@ -1,4 +1,3 @@
-// Service to manage API requests related to projects
 const getMyProjects = () => {
     return {
         url: `/project`,

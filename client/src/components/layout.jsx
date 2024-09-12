@@ -5,14 +5,17 @@ import { useEffect, useState } from "react";
 import AuthService from "@/services/auth-service";
 import Navbar from "./others/navigationBar/Navbar";
 
-// Layout component to wrap the main application with authentication check
 const Layout = ({ children }) => {
   const [isAuthorized, setIsAuthorized] = useState(false);
+
   const router = useRouter();
 
   useEffect(() => {
     const authorized = AuthService.isAuthorized();
     setIsAuthorized(authorized);
+
+    //uses Next.js's useRouter hook to navigate the user to the homepage ("/")
+    //The replace method replaces the current history entry in the browser, so the user can't go back to the previous page using the back button
 
     if (!authorized) {
       router.replace("/");
@@ -24,10 +27,10 @@ const Layout = ({ children }) => {
   }
 
   return (
-      <Flex w="100vw">
-        <Navbar />
-        {children}
-      </Flex>
+    <Flex w="100vw">
+      <Navbar />
+      {children}
+    </Flex>
   );
 };
 

@@ -1,4 +1,4 @@
-// This file configures the Redux store with persist capabilities
+// This file will globally hold all the reducers
 import { configureStore } from "@reduxjs/toolkit";
 import {
     persistStore,
@@ -11,6 +11,10 @@ import {
     REGISTER,
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import authReducer from "../features/authSlice";
+import miscellaneousSlice from "../features/miscellaneousSlice";
+import projectSlice from "../features/projectSlice";
+import ticketSlice from "../features/ticketSlice";
 
 const persistConfig = {
     key: 'root',
@@ -18,7 +22,15 @@ const persistConfig = {
     version: 1
 };
 
-const persistCombinedReducers = persistCombineReducers(persistConfig);
+// ? Add the reducers here
+const rootReducer = {
+    auth: authReducer,
+    project: projectSlice,
+    miscellaneous: miscellaneousSlice,
+    ticket: ticketSlice,
+};
+
+const persistCombinedReducers = persistCombineReducers(persistConfig, rootReducer);
 
 let store = configureStore({
     reducer: persistCombinedReducers,
@@ -29,7 +41,6 @@ let store = configureStore({
             },
         }),
 });
-
 let persistor = persistStore(store);
 
 export { store, persistor };

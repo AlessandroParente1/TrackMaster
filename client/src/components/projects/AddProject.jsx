@@ -25,6 +25,7 @@ import {
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import AuthService from "@/services/auth-service";
 import MiscellaneousService from "@/services/miscellaneous-service";
 import ProjectService from "@/services/project-service";
 import useApi from "@/hooks/useApi";
@@ -41,11 +42,11 @@ import RichTextEditor from "../editor/RichTextEditor";
 import AlertModal from "../others/AlertModal";
 import Table from "../others/Table";
 
-// Component to handle project creation and update
 const AddProject = ({ isOpen, onClose, projectInfo, mutateServer }) => {
   // Hooks and state management
   const useAuth = useAuthStore();
   const isNewProject = projectInfo === undefined;
+
   const router = useRouter();
   const formRef = useRef();
   const deleteProjectDisclosure = useDisclosure();
@@ -56,10 +57,10 @@ const AddProject = ({ isOpen, onClose, projectInfo, mutateServer }) => {
   const [projectInfoData, setProjectInfoData] = useState(CreateProjectData);
   const [isProjectAuthor, setIsProjectAuthor] = useState(isNewProject);
 
-  // Fetch all users for assignee selection
   const allUsersSWR = useApi(MiscellaneousService.getUsers(), isOpen);
 
   // Update local state when the modal opens or projectInfo changes
+
   useEffect(() => {
     if (isOpen && projectInfo) {
       setProjectInfoData({
@@ -69,20 +70,19 @@ const AddProject = ({ isOpen, onClose, projectInfo, mutateServer }) => {
       });
 
       setProjectDescription(projectInfo.description);
+
       setSelectedAssigneeIds(
-          projectInfo.assignees.map((assignee) => assignee._id)
+        projectInfo.assignees.map((assignee) => assignee._id)
       );
 
       setIsProjectAuthor(useAuth.userProfile?._id === projectInfo.authorId._id);
     }
   }, [isOpen]);
 
-  // Handle selection changes in the assignee table
   const onAssigneeClick = ({ selected }) => {
     setSelectedAssigneeIds(Object.keys(selected));
   };
 
-  // Handle project deletion
   const onProjectDelete = async () => {
     try {
       await mutateServer(ProjectService.deleteProject(projectInfo._id));
@@ -94,7 +94,6 @@ const AddProject = ({ isOpen, onClose, projectInfo, mutateServer }) => {
     }
   };
 
-  // Close the modal and reset form state
   const onCloseModal = () => {
     setError("");
     setProjectInfoData(CreateProjectData);
@@ -103,7 +102,6 @@ const AddProject = ({ isOpen, onClose, projectInfo, mutateServer }) => {
     onClose();
   };
 
-  // Handle form submission for creating or updating a project
   const onHandleFormSubmit = async (data) => {
     try {
       const projectData = { ...data };
@@ -117,8 +115,8 @@ const AddProject = ({ isOpen, onClose, projectInfo, mutateServer }) => {
       } else {
         projectData._id = projectInfo._id;
         apiRequestInfo = ProjectService.updateProject(
-            projectData,
-            projectInfo._id
+          projectData,
+          projectInfo._id
         );
       }
 
@@ -133,130 +131,130 @@ const AddProject = ({ isOpen, onClose, projectInfo, mutateServer }) => {
   };
 
   return (
-      <Modal
-          closeOnOverlayClick={false}
-          isOpen={isOpen}
-          onClose={onCloseModal}
-          size="lg"
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>{isNewProject ? "Create" : "Update"} Project</ModalHeader>
-          <ModalCloseButton onClick={onClose} />
+    <Modal
+      closeOnOverlayClick={false}
+      isOpen={isOpen}
+      onClose={onCloseModal}
+      size="lg"
+    >
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>{isNewProject ? "Create" : "Update"} Project</ModalHeader>
+        <ModalCloseButton onClick={onClose} />
 
-          <ModalBody overflowY="auto" mt={-10}>
-            <Tabs variant="enclosed" size="sm" colorScheme="blue" mt={10}>
-              <TabList>
-                <Tab>Project Info</Tab>
-                <Tab>Contributors</Tab>
-              </TabList>
+        <ModalBody overflowY="auto" mt={-10}>
+          <Tabs variant="enclosed" size="sm" colorScheme="blue" mt={10}>
+            <TabList>
+              <Tab>Project Info</Tab>
+              <Tab>Contributors</Tab>
+            </TabList>
 
-              {error && (
-                  <Alert status="error" variant="left-accent" fontSize="sm" mb={2}>
-                    <AlertIcon />
-                    {error}
-                  </Alert>
-              )}
+            {error && (
+              <Alert status="error" variant="left-accent" fontSize="sm" mb={2}>
+                <AlertIcon />
+                {error}
+              </Alert>
+            )}
 
-              <TabPanels maxHeight="100%" height="100%">
-                <TabPanel>
-                  <Formik
-                      initialValues={projectInfoData}
-                      validationSchema={CreateProjectSchema}
-                      onSubmit={onHandleFormSubmit}
-                      innerRef={formRef}
-                      enableReinitialize
-                  >
-                    {({ errors, touched }) => (
-                        <Flex direction="column" justify="space-between">
-                          <Form>
-                            <Box>
-                              <Flex direction="column" gap={3}>
-                                <FormControl
-                                    isInvalid={errors.title && touched.title}
-                                >
-                                  <FormLabel>Title</FormLabel>
-                                  <Field
-                                      as={Input}
-                                      name="title"
-                                      type="text"
-                                      borderWidth="2px"
-                                      disabled={!isProjectAuthor}
-                                  />
-                                  <FormErrorMessage>
-                                    {errors.title}
-                                  </FormErrorMessage>
-                                </FormControl>
-
-                                <FormControl>
-                                  <FormLabel>Description</FormLabel>
-                                  <RichTextEditor
-                                      content={projectDescription}
-                                      setContent={setProjectDescription}
-                                      disabled={!isProjectAuthor}
-                                  />
-                                </FormControl>
-                              </Flex>
-                            </Box>
-                          </Form>
-                        </Flex>
-                    )}
-                  </Formik>
-                </TabPanel>
-                <TabPanel>
-                  <Table
-                      tableData={
-                        !isNewProject && !isProjectAuthor
-                            ? projectInfo.assignees
-                            : allUsersSWR.data
-                      }
-                      columns={
-                        !isNewProject && !isProjectAuthor
-                            ? PROJECT_ASSIGNEES_COLUMNS
-                            : USERS_COLUMNS
-                      }
-                      searchPlaceholder={"Search for users"}
-                      height={330}
-                      hasCheckboxColumn={isProjectAuthor}
-                      sortable={false}
-                      selectedRowIds={selectedAssigneeIds}
-                      onSelectionChange={onAssigneeClick}
-                  />
-                </TabPanel>
-              </TabPanels>
-            </Tabs>
-          </ModalBody>
-
-          <ModalFooter mr={3} gap={3}>
-            {!isNewProject && isProjectAuthor ? (
-                <Button colorScheme="red" onClick={deleteProjectDisclosure.onOpen}>
-                  Delete Project
-                </Button>
-            ) : null}
-
-            {isProjectAuthor ? (
-                <Button
-                    colorScheme="blue"
-                    onClick={() => {
-                      formRef.current?.submitForm();
-                    }}
+            <TabPanels maxHeight="100%" height="100%">
+              <TabPanel>
+                <Formik
+                  initialValues={projectInfoData}
+                  validationSchema={CreateProjectSchema}
+                  onSubmit={onHandleFormSubmit}
+                  innerRef={formRef}
+                  enableReinitialize
                 >
-                  {isNewProject ? "Create" : "Save Changes"}
-                </Button>
-            ) : null}
+                  {({ errors, touched }) => (
+                    <Flex direction="column" justify="space-between">
+                      <Form>
+                        <Box>
+                          <Flex direction="column" gap={3}>
+                            <FormControl
+                              isInvalid={errors.title && touched.title}
+                            >
+                              <FormLabel>Title</FormLabel>
+                              <Field
+                                as={Input}
+                                name="title"
+                                type="text"
+                                borderWidth="2px"
+                                disabled={!isProjectAuthor}
+                              />
+                              <FormErrorMessage>
+                                {errors.title}
+                              </FormErrorMessage>
+                            </FormControl>
 
-            {!isProjectAuthor ? <Button onClick={onClose}>Close</Button> : null}
-          </ModalFooter>
+                            <FormControl>
+                              <FormLabel>Description</FormLabel>
+                              <RichTextEditor
+                                content={projectDescription}
+                                setContent={setProjectDescription}
+                                disabled={!isProjectAuthor}
+                              />
+                            </FormControl>
+                          </Flex>
+                        </Box>
+                      </Form>
+                    </Flex>
+                  )}
+                </Formik>
+              </TabPanel>
+              <TabPanel>
+                <Table
+                  tableData={
+                    !isNewProject && !isProjectAuthor
+                      ? projectInfo.assignees
+                      : allUsersSWR.data
+                  }
+                  columns={
+                    !isNewProject && !isProjectAuthor
+                      ? PROJECT_ASSIGNEES_COLUMNS
+                      : USERS_COLUMNS
+                  }
+                  searchPlaceholder={"Search for users"}
+                  height={330}
+                  hasCheckboxColumn={isProjectAuthor}
+                  sortable={false}
+                  selectedRowIds={selectedAssigneeIds}
+                  onSelectionChange={onAssigneeClick}
+                />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </ModalBody>
 
-          <AlertModal
-              title={"Delete project"}
-              body="Are you sure you to delete project?"
-              isOpen={deleteProjectDisclosure.isOpen}
-              onClose={deleteProjectDisclosure.onClose}
-              onCTA={onProjectDelete}
-          />
-        </ModalContent>
-      </Modal>
+        <ModalFooter mr={3} gap={3}>
+          {!isNewProject && isProjectAuthor ? (
+            <Button colorScheme="red" onClick={deleteProjectDisclosure.onOpen}>
+              Delete Project
+            </Button>
+          ) : null}
+
+          {isProjectAuthor ? (
+            <Button
+              colorScheme="blue"
+              onClick={() => {
+                formRef.current?.submitForm();
+              }}
+            >
+              {isNewProject ? "Create" : "Save Changes"}
+            </Button>
+          ) : null}
+
+          {!isProjectAuthor ? <Button onClick={onClose}>Close</Button> : null}
+        </ModalFooter>
+
+        <AlertModal
+          title={"Delete project"}
+          body="Are you sure you to delete project?"
+          isOpen={deleteProjectDisclosure.isOpen}
+          onClose={deleteProjectDisclosure.onClose}
+          onCTA={onProjectDelete}
+        />
+      </ModalContent>
+    </Modal>
   );
 };
 

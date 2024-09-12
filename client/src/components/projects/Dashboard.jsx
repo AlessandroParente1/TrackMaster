@@ -27,15 +27,17 @@ import { hexToRgb } from "@/util/Utils";
 import StatCard from "../others/StatCard";
 
 // Register Chart.js components
+
 ChartJS.register(ArcElement, Tooltip, Legend, Colors);
 
 // Dashboard component to display project statistics and charts
+
 const Dashboard = ({ projectId }) => {
   const [projectStats, setProjectStats] = useState([]);
   const [ticketTypeChartData, setTicketTypeChartData] = useState(null);
   const [ticketStatusChartData, setTicketStatusChartData] = useState(null);
-  const iconColor = useColorModeValue("white", "white"); // Set icon color based on color mode
-  const projectStatsSWR = useApi(ProjectService.getProjectStats(projectId)); // Fetch project stats
+  const iconColor = useColorModeValue("white", "white");
+  const projectStatsSWR = useApi(ProjectService.getProjectStats(projectId));
 
   const iconBackgroundColor = [
     "purple.300",
@@ -44,7 +46,6 @@ const Dashboard = ({ projectId }) => {
     "blue.300",
   ];
 
-  // Create stat info for display
   const createStatInfo = (stat) => {
     return [
       {
@@ -78,7 +79,6 @@ const Dashboard = ({ projectId }) => {
     ];
   };
 
-  // Prepare data for the ticket type chart
   const createTicketTypeChartData = (stat) => {
     const data = {
       labels: [],
@@ -106,7 +106,6 @@ const Dashboard = ({ projectId }) => {
     return data;
   };
 
-  // Prepare data for the ticket status chart
   const createTicketStatusChartData = (stat) => {
     const data = {
       labels: [],
@@ -152,60 +151,61 @@ const Dashboard = ({ projectId }) => {
   };
 
   // Update state when project stats are fetched
+
   useEffect(() => {
     if (projectStatsSWR.data) {
       setProjectStats(createStatInfo(projectStatsSWR.data));
       setTicketTypeChartData(createTicketTypeChartData(projectStatsSWR.data));
       setTicketStatusChartData(
-          createTicketStatusChartData(projectStatsSWR.data)
+        createTicketStatusChartData(projectStatsSWR.data)
       );
     }
   }, [projectStatsSWR.data]);
 
   // Show spinner while data is loading
+
   if (projectStatsSWR.isLoading) {
     return (
-        <Center w="100%">
-          <Spinner color="blue" size="xl" />
-        </Center>
+      <Center w="100%">
+        <Spinner color="blue" size="xl" />
+      </Center>
     );
   }
-
   return (
-      <Flex w="100%" direction="column">
-        <Flex w="100%" grow="2" justifyContent="space-evenly" gap={3}>
-          {projectStats.map((stat, index) => (
-              <StatCard {...stat} key={index} />
-          ))}
-        </Flex>
-        <br />
-
-        <Flex h="100%" justifyContent="space-evenly">
-          {ticketTypeChartData ? (
-              <Box w={400} h={400} align="center">
-                <Heading as="h5" size="md">
-                  Ticket Type
-                </Heading>
-                <Pie
-                    data={ticketTypeChartData}
-                    options={{ plugins: { colors: { enabled: true } } }}
-                />
-              </Box>
-          ) : null}
-
-          {ticketStatusChartData ? (
-              <Box w={400} h={400} align="center">
-                <Heading as="h5" size="md">
-                  Ticket Status
-                </Heading>
-                <Pie
-                    data={ticketStatusChartData}
-                    options={{ plugins: { colors: { enabled: true } } }}
-                />
-              </Box>
-          ) : null}
-        </Flex>
+    <Flex w="100%" direction="column">
+      <Flex w="100%" grow="2" justifyContent="space-evenly" gap={3}>
+        {projectStats.map((stat, index) => (
+          <StatCard {...stat} key={index} />
+        ))}
       </Flex>
+      <br />
+
+      <Flex h="100%" justifyContent="space-evenly">
+        {ticketTypeChartData ? (
+          <Box w={400} h={400} align="center">
+            <Heading as="h5" size="md">
+              Ticket Type
+            </Heading>
+            <Pie
+              data={ticketTypeChartData}
+              options={{ plugins: { colors: { enabled: true } } }}
+            />
+          </Box>
+        ) : null}
+
+        {ticketStatusChartData ? (
+          <Box w={400} h={400} align="center">
+            <Heading as="h5" size="md">
+              Ticket Status
+            </Heading>
+            <Pie
+              data={ticketStatusChartData}
+              options={{ plugins: { colors: { enabled: true } } }}
+            />
+          </Box>
+        ) : null}
+      </Flex>
+    </Flex>
   );
 };
 

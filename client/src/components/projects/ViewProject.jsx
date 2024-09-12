@@ -28,10 +28,10 @@ import Loading from "../others/Loading";
 import CreateTicket from "../tickets/CreateTicket";
 import AddProject from "./AddProject";
 
-// ViewProject component to display project details, tickets, and overview
 const ViewProject = ({ projectId }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const projectInfoDiscloure = useDisclosure();
+
   const router = useRouter();
 
   const projectTicketsSWR = useApi(TicketService.getProjectTickets(projectId));
@@ -62,79 +62,79 @@ const ViewProject = ({ projectId }) => {
   }
 
   return (
-      <Flex w="100%" direction="column" px={8} py={6}>
-        <Head>
-          <title>{projectInfoSWR.data?.title || "Projects"}</title>
-        </Head>
-        <Flex w="100%" h="fit-content">
-          <Heading as="h1" size="md" fontWeight={600}>
-            <IconButton
-                icon={<ArrowBackIcon />}
-                variant="link"
-                size="lg"
-                colorScheme="black"
-                onClick={navigateBack}
-            />
-            {projectInfoSWR.data?.title}
-          </Heading>
+    <Flex w="100%" direction="column" px={8} py={6}>
+      <Head>
+        <title>{projectInfoSWR.data?.title || "Projects"}</title>
+      </Head>
+      <Flex w="100%" h="fit-content">
+        <Heading as="h1" size="md" fontWeight={600}>
+          <IconButton
+            icon={<ArrowBackIcon />}
+            variant="link"
+            size="lg"
+            colorScheme="black"
+            onClick={navigateBack}
+          />
+          {projectInfoSWR.data?.title}
+        </Heading>
 
-          <Spacer />
+        <Spacer />
 
-          <PermissionsRender permissionCheck={Permissions.canManageTickets}>
-            <Button colorScheme="blue" size="md" mr={5} onClick={() => onOpen()}>
-              Add Ticket
-            </Button>
-          </PermissionsRender>
-
-          <Button
-              colorScheme="teal"
-              onClick={() => projectInfoDiscloure.onOpen()}
-          >
-            Project Info
+        <PermissionsRender permissionCheck={Permissions.canManageTickets}>
+          <Button colorScheme="blue" size="md" mr={5} onClick={() => onOpen()}>
+            Add Ticket
           </Button>
-        </Flex>
+        </PermissionsRender>
 
-        <Tabs variant="enclosed" size="sm" colorScheme="blue" mt={2} h="100%">
-          <TabList>
-            <Tab>Tickets</Tab>
-            <Tab>Overview</Tab>
-          </TabList>
-
-          <TabPanels h="100%">
-            <TabPanel h="100%">
-              <Table
-                  tableData={projectTicketsSWR.data}
-                  columns={TICKETS_COLUMNS}
-                  searchPlaceholder="Search tickets by type, title, status ..."
-                  onRowClick={onTicketClick}
-                  defaultSortInfo={TICKETS_DEFAULT_SORT}
-                  height="92%"
-              />
-            </TabPanel>
-            <TabPanel>
-              {projectId ? <Dashboard projectId={projectId} /> : null}
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
-        <br />
-
-        {projectInfoSWR.data ? (
-            <CreateTicket
-                isOpen={isOpen}
-                onClose={onModalClose}
-                ticket={viewTicket}
-                projectInfo={projectInfoSWR.data}
-                mutateServer={projectTicketsSWR.mutateServer}
-            />
-        ) : null}
-
-        <AddProject
-            isOpen={projectInfoDiscloure.isOpen}
-            onClose={projectInfoDiscloure.onClose}
-            projectInfo={projectInfoSWR.data}
-            mutateServer={projectInfoSWR.mutateServer}
-        />
+        <Button
+          colorScheme="teal"
+          onClick={() => projectInfoDiscloure.onOpen()}
+        >
+          Project Info
+        </Button>
       </Flex>
+
+      <Tabs variant="enclosed" size="sm" colorScheme="blue" mt={2} h="100%">
+        <TabList>
+          <Tab>Tickets</Tab>
+          <Tab>Overview</Tab>
+        </TabList>
+
+        <TabPanels h="100%">
+          <TabPanel h="100%">
+            <Table
+              tableData={projectTicketsSWR.data}
+              columns={TICKETS_COLUMNS}
+              searchPlaceholder="Search tickets by type, title, status ..."
+              onRowClick={onTicketClick}
+              defaultSortInfo={TICKETS_DEFAULT_SORT}
+              height="92%"
+            />
+          </TabPanel>
+          <TabPanel>
+            {projectId ? <Dashboard projectId={projectId} /> : null}
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
+      <br />
+
+      {projectInfoSWR.data ? (
+        <CreateTicket
+          isOpen={isOpen}
+          onClose={onModalClose}
+          ticket={viewTicket}
+          projectInfo={projectInfoSWR.data}
+          mutateServer={projectTicketsSWR.mutateServer}
+        />
+      ) : null}
+
+      <AddProject
+        isOpen={projectInfoDiscloure.isOpen}
+        onClose={projectInfoDiscloure.onClose}
+        projectInfo={projectInfoSWR.data}
+        mutateServer={projectInfoSWR.mutateServer}
+      />
+    </Flex>
   );
 };
 

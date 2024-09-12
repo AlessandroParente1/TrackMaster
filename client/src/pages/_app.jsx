@@ -7,17 +7,16 @@ import { SWRDevTools } from "swr-devtools";
 import Layout from "@/components/layout.jsx";
 import "../styles/globals.scss";
 
-// Main App component to wrap the entire application with global providers
 const App = ({ Component, pageProps }) => {
-    return (
-        <SWRDevTools>
-            <ChakraProvider theme={theme}>
-                <Layout>
-                    <Component {...pageProps} />
-                </Layout>
-            </ChakraProvider>
-        </SWRDevTools>
-    );
+  return (
+    <SWRDevTools>
+      <ChakraProvider theme={theme}>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </ChakraProvider>
+    </SWRDevTools>
+  );
 };
 
 export default App;

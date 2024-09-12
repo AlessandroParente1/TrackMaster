@@ -1,7 +1,6 @@
 import Role from "../models/role.model.js";
 import User from "../models/user.model.js";
 
-// Get all roles
 export const getRoles = async (req, res) => {
     try {
         const roles = await Role.find({});
@@ -13,7 +12,6 @@ export const getRoles = async (req, res) => {
     }
 };
 
-// Add a new role
 export const addRole = async (req, res) => {
     const { name, permissions } = req.body;
 
@@ -33,7 +31,6 @@ export const addRole = async (req, res) => {
     }
 };
 
-// Delete a role
 export const deleteRole = async (req, res) => {
     const { roleId } = req.params;
 
@@ -53,7 +50,6 @@ export const deleteRole = async (req, res) => {
     }
 };
 
-// Update an existing role
 export const updateRole = async (req, res) => {
     const { roleId } = req.params;
     const { name, permissions } = req.body;

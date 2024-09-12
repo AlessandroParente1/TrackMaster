@@ -4,18 +4,24 @@ import * as BsIcon from "react-icons/bs";
 import TooltipAvatar from "../components/others/TooltipAvatar";
 import { getUserFullname } from "./Utils";
 
-// Default sort order for tickets
+
+const styles = {
+    fontWeight: "500",
+    // color: "#CBD5E0",
+    cursor: "pointer",
+};
+
 export const TICKETS_DEFAULT_SORT = { name: 'createdOn', dir: -1 };
 
-// Column definitions for projects
+
 export const PROJECTS_COLUMNS = [
     {
         name: "title",
-        searchInField: ["title"], // Fields to search in for this column
-        header: "TITLE", // Column header text
-        flex: 1, // Flex property for column width
+        searchInField: ["title"],
+        header: "TITLE",
+        flex: 1,
         render: ({ value }) => {
-            // Custom render function for displaying the title
+
             return <span style={styles}>{value}</span>;
         }
     },
@@ -24,7 +30,6 @@ export const PROJECTS_COLUMNS = [
         header: "AUTHOR",
         flex: 1,
         render: ({ value }) => {
-            // Display the author's full name
             return value.firstName + " " + value.lastName;
         }
     },
@@ -35,17 +40,17 @@ export const PROJECTS_COLUMNS = [
         flex: 1,
         headerProps: {
             style: {
-                backgroundColor: "#334154" // Custom header background color
+                backgroundColor: "#334154"
             }
         },
         render: ({ value }) => {
-            // Format and display the creation date
+            // Display the author's full name
+
             return moment(value).format("MMMM DD, YYYY");
         }
     }
 ];
 
-// Column definitions for tickets
 export const TICKETS_COLUMNS = [
     {
         name: "type",
@@ -58,7 +63,6 @@ export const TICKETS_COLUMNS = [
             return (
                 <Tooltip label={name}>
                     <span>
-                        {/* Display ticket type icon */}
                         <Icon as={BsIcon[iconName]} bg={colour} color="gray.50" w={6} h={6} p={1} borderRadius={5} />
                     </span>
                 </Tooltip>
@@ -71,7 +75,6 @@ export const TICKETS_COLUMNS = [
         header: "TITLE",
         flex: 3,
         render: ({ value }) => {
-            // Display the ticket title
             return <span style={styles}>{value}</span>;
         },
     },
@@ -87,7 +90,6 @@ export const TICKETS_COLUMNS = [
         header: "STATUS",
         flex: 1,
         render: ({ value }) => {
-            // Display ticket status with different colors
             switch (value) {
                 case "Open":
                     return <Badge colorScheme='orange'>{value}</Badge>;
@@ -107,7 +109,6 @@ export const TICKETS_COLUMNS = [
         header: "ASSIGNEES",
         flex: 1,
         render: ({ value }) => {
-            // Display a group of avatars for assignees
             return (
                 <AvatarGroup size="sm" max={5}>
                     {
@@ -125,7 +126,6 @@ export const TICKETS_COLUMNS = [
         header: "CREATED BY",
         flex: 1,
         render: ({ data }) => {
-            // Display the name of the person who created the ticket
             return data.createdBy.firstName + " " + data.createdBy.lastName;
         },
 
@@ -136,13 +136,11 @@ export const TICKETS_COLUMNS = [
         header: "CREATED ON",
         flex: 1,
         render: ({ value }) => {
-            // Format and display the creation date
             return moment(value).format("MMMM DD, YYYY");
         },
     }
 ];
 
-// Column definitions for tickets assigned to the current user
 export const MY_TICKETS_COLUMNS = [
     {
         name: "type",
@@ -155,7 +153,6 @@ export const MY_TICKETS_COLUMNS = [
             return (
                 <Tooltip label={name}>
                     <span>
-                        {/* Display ticket type icon */}
                         <Icon as={BsIcon[iconName]} bg={colour} color="gray.50" w={6} h={6} p={1} borderRadius={5} />
                     </span>
                 </Tooltip>
@@ -168,7 +165,6 @@ export const MY_TICKETS_COLUMNS = [
         header: "PROJECT",
         flex: 1,
         render: ({ data }) => {
-            // Display the title of the project associated with the ticket
             return <span style={styles}>{data.projectId.title}</span>;
         },
     },
@@ -178,7 +174,6 @@ export const MY_TICKETS_COLUMNS = [
         header: "TITLE",
         flex: 3,
         render: ({ value }) => {
-            // Display the ticket title
             return <span style={styles}>{value}</span>;
         },
     },
@@ -188,7 +183,6 @@ export const MY_TICKETS_COLUMNS = [
         header: "STATUS",
         flex: 1,
         render: ({ value }) => {
-            // Display ticket status with different colors
             switch (value) {
                 case "Open":
                     return <Badge colorScheme='orange'>{value}</Badge>;
@@ -208,7 +202,6 @@ export const MY_TICKETS_COLUMNS = [
         header: "ASSIGNEES",
         flex: 1,
         render: ({ value }) => {
-            // Display a group of avatars for assignees
             return (
                 <AvatarGroup size="sm" max={5}>
                     {
@@ -226,14 +219,12 @@ export const MY_TICKETS_COLUMNS = [
         header: "CREATED BY",
         flex: 1,
         render: ({ data }) => {
-            // Display the name of the person who created the ticket
             return data.createdBy.firstName + " " + data.createdBy.lastName;
         },
 
     }
 ];
 
-// Column definitions for users
 export const USERS_COLUMNS = [
     {
         name: "_id",
@@ -241,7 +232,6 @@ export const USERS_COLUMNS = [
         header: "NAME",
         flex: 1,
         render: ({ data }) => {
-            // Display user's full name
             return data.firstName + " " + data.lastName;
         }
     },
@@ -250,13 +240,11 @@ export const USERS_COLUMNS = [
         header: "ROLE",
         flex: 1,
         render: ({ data }) => {
-            // Display the user's role
             return data.roleId.name;
         }
     }
 ];
 
-// Column definitions for project assignees
 export const PROJECT_ASSIGNEES_COLUMNS = [
     {
         name: "_id",
@@ -264,8 +252,8 @@ export const PROJECT_ASSIGNEES_COLUMNS = [
         header: "NAME",
         flex: 1,
         render: ({ data }) => {
-            // Display assignee's full name
             return data.firstName + " " + data.lastName;
+
         }
     },
     {
@@ -273,13 +261,11 @@ export const PROJECT_ASSIGNEES_COLUMNS = [
         header: "ROLE",
         flex: 1,
         render: ({ data }) => {
-            // Display assignee's role
             return data.roleId.name;
         }
     }
 ];
 
-// Column definitions for managing users
 export const MANAGE_USERS_COLUMNS = [
     {
         name: "_id",
@@ -287,7 +273,7 @@ export const MANAGE_USERS_COLUMNS = [
         header: "NAME",
         flex: 1,
         render: ({ data }) => {
-            // Display full name of the user
+
             return (
                 <span style={styles}>
                     {getUserFullname(data)}
@@ -306,20 +292,18 @@ export const MANAGE_USERS_COLUMNS = [
         header: "ROLE",
         flex: 1,
         render: ({ value }) => {
-            // Display role name or "No Data" if not available
             return value?.name || "No Data";
         }
     }
 ];
 
-// Column definitions for managing roles
 export const MANAGE_ROLES = [
     {
         name: "name",
         header: "ROLE NAME",
         searchInField: ["name"],
         render: ({ value }) => {
-            // Display role name
+
             return (
                 <span style={styles}>
                     {value}
@@ -333,7 +317,6 @@ export const MANAGE_ROLES = [
         header: "PERMISSIONS",
         flex: 5,
         render: ({ value }) => {
-            // Display list of permissions or a message if none are available
             if (value.length > 0) {
                 return value.map((permission, index) =>
                     <p key={index}>{permission}</p>
@@ -342,11 +325,11 @@ export const MANAGE_ROLES = [
             else {
                 return "--No Permissions--";
             }
+
         }
     }
 ];
 
-// Column definitions for managing ticket types
 export const MANAGE_TICKET_TYPES_COLUMNS = [
     {
         name: "_id",
@@ -370,7 +353,6 @@ export const MANAGE_TICKET_TYPES_COLUMNS = [
     }
 ];
 
-// Column definitions for icons
 export const ICONS_COLUMNS = [
     {
         name: "icon",
