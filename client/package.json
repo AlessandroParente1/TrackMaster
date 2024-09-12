@@ -5,6 +5,7 @@
   "dependencies": {
     "@chakra-ui/icons": "^2.0.17",
     "@chakra-ui/react": "^2.5.1",
+    "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.10.6",
     "@inovua/reactdatagrid-community": "^5.8.5",
     "@reduxjs/toolkit": "^2.2.7",
@@ -34,7 +35,6 @@
     "yup": "^1.0.2",
     "zustand": "^4.4.6"
   },
-
   "scripts": {
     "dev": "next dev",
     "analyze": "cross-env ANALYZE=true next build",
