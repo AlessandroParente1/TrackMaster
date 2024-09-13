@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 //Middleware
-app.get("/", (_, res) => res.send("Welcome to TrackIt API"));
+app.get("/", (_, res) => res.send("Welcome to TrackMaster API"));
 app.use('/auth', authRoutes);
 app.use('/user', authMiddleware, userRoutes);
 app.use('/role', authMiddleware, roleRoutes);
