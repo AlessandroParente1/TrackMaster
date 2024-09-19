@@ -4,8 +4,10 @@ import User from '../models/user.model.js';
 import { getUserRole } from "../util/utils.js";
 
 export const authMiddleware = async (req, res, next) => {
+    //extracts the token from the x-access-token header of the incoming request
     const token = req.headers['x-access-token'];
     if (token) {
+        //If a token is present, it is verified using jsonwebtoken's verify method
         jwt.verify(token, process.env.SECRET_KEY, (error, decoded) => {
             if (error) {
                 return res.status(500).json({ error });
