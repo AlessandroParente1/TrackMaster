@@ -22,6 +22,7 @@
 		"moment": "^2.29.4",
 		"mongoose": "^7.0.2",
 		"nodemon": "^2.0.21",
+		"socket.io": "^4.7.5",
 		"yup": "^1.0.2"
 	},
 	"devDependencies": {
