@@ -7,8 +7,27 @@ import { Permissions } from '../util/utils.js';
 const router = express.Router();
 
 router.get("/", getRoles);
-router.post("/", [checkUserPermissions("role", Permissions.canManageAdminPage), validateResource(createRoleSchema)], addRole);
-router.patch("/:roleId", [checkUserPermissions("role", Permissions.canManageAdminPage), validateResource(createRoleSchema), validateParamId("roleId")], updateRole);
-router.delete("/:roleId", [checkUserPermissions("role", Permissions.canManageAdminPage), validateParamId("roleId")], deleteRole);
+
+router.post("/",
+    [
+        checkUserPermissions("role", Permissions.canManageAdminPage),
+        validateResource(createRoleSchema)
+    ],
+    addRole);
+
+router.patch("/:roleId",
+    [
+        checkUserPermissions("role", Permissions.canManageAdminPage),
+        validateResource(createRoleSchema),
+        validateParamId("roleId")
+    ],
+    updateRole);
+
+router.delete("/:roleId",
+    [
+        checkUserPermissions("role", Permissions.canManageAdminPage),
+        validateParamId("roleId")
+    ],
+    deleteRole);
 
 export default router;

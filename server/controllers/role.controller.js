@@ -16,9 +16,9 @@ export const addRole = async (req, res) => {
     const { name, permissions } = req.body;
 
     try {
-        const exisitingRole = await Role.findOne({ name });
+        const existingRole = await Role.findOne({ name });
 
-        if (exisitingRole) {
+        if (existingRole) {
             return res.status(400).json({ message: "Role already exist" });
         }
 

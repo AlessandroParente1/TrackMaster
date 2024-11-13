@@ -6,7 +6,7 @@ export const getComments = async (req, res) => {
     try {
         const comments = await Comment.find({ ticketId }, { _id: 1, text: 1, userId: 1, updatedOn: 1, createdOn: 1 })
             .populate([
-                { path: "userId", select: { firstName: 1, lastName: 1 } }
+                { path: "userId", select: { firstName: 1, lastName: 1 } }//select allows you to select only some fields that have to be populated
             ])
             .sort({ createdOn: "desc" });
 

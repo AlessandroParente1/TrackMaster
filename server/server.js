@@ -10,7 +10,7 @@ try {
         console.log("\n");
         console.log("==========================================");
         console.info(`🚀 Running Environment: ${CURRENT_ENVIRONMENT}`);
-        console.info(`✅ Server Running On: http://localhost:${PORT}`);
+        console.info(`✅ Server Running On: http://localhost:${process.env.PORT || 5000}`);
         console.info(`🔗 MongoDB Connection URL: ${MONGO_DB_CONNECTION}`);
         console.log("==========================================");
     });

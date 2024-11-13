@@ -3,11 +3,12 @@ import User from "../models/user.model.js";
 import Ticket from "../models/ticket.model.js";
 import mongoose from "mongoose";
 
+//JSDoc:
 /**
  * @description: Creates a project
- * @param {title} string 
+ * @param {title} string
  * @param {description} string optional
- *  
+ *
  * @returns status 200
  */
 
@@ -25,8 +26,8 @@ export const addProject = async (req, res) => {
             return res.status(400).json({ message: "Project already exist with that title" });
         }
 
-        if (!assignees.includes(userId.toString())) {
-            assignees.push(userId);
+        if (!assignees.includes(userId.toString())) {//isn't the user id (userId) already in the array assignees?
+            assignees.push(userId);//If userId isn't already in assignees, it gets added (pushed) to the array.
         }
 
         //Create project
@@ -48,15 +49,16 @@ export const addProject = async (req, res) => {
             updateAssigneeProjectList.push(updateUser);
         });
 
-
+        //executes all the promises in the array updateAssigneeProjectList in parallel and waits for them to complete before proceeding with the rest of the code.
         await Promise.all(updateAssigneeProjectList);
 
+        //Return the new project
         return res.json(newProject);
 
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: "Internal server issue" });
-    };
+    }
 };
 
 /**
@@ -67,10 +69,9 @@ export const getUserProjects = async (req, res) => {
         const userId = req.user._id;
 
         // * Get all the user's projects
-        // ? To find documents with array that contains specfic value, you can simply do "assginees: userId", it will return all documents with array containing userId
+        // ? To find documents with array that contains specific value, you can simply do "assignees: userId", it will return all documents with array containing userId
         const projects = await Project.find({ assignees: userId })
             .populate({ path: "authorId", select: ["firstName", "lastName"] });
-        // .populate({ path: "assignees", select: ["firstName", "lastName, roleId"], populate: { path: "roleId", select: ["name"] } });
 
         return res.json(projects);
 
@@ -93,7 +94,7 @@ export const getProjectInfo = async (req, res) => {
             .populate({ path: "authorId", select: { firstName: 1, lastName: 1 } })
             .populate({ path: "assignees", select: { firstName: 1, lastName: 1 }, populate: { path: "roleId", select: { _id: 0, name: 1 } } });
 
-        if (project.length == 0) {
+        if (project.length === 0) {
             return res.status(404).json({ message: "Project not found" });
         }
 
@@ -119,7 +120,7 @@ export const updateProject = async (req, res) => {
     const { projectId } = req.params;
 
     try {
-        //Get user permssion
+        //Get user permission
         const userId = req.user._id;
 
         //Authorize - ensure signed in user is the project author
@@ -134,14 +135,17 @@ export const updateProject = async (req, res) => {
             assignees.push(userId.toString());
         }
 
-        //Get all the removed assginee
+        //Get all the removed assignees
         const removedAssignees = project.assignees.filter(assigneeId => !assignees.includes(assigneeId.toString()));
 
         //Unassign all their tickets
         const updateTicketAssigneesPromise = removedAssignees.map(assigneeId => {
             const updateTicketPromise = new Promise(async (resolve, reject) => {
                 try {
-                    await Ticket.updateMany({ assignees: assigneeId, projectId }, { $pull: { assignees: new mongoose.Types.ObjectId(assigneeId) } });
+                    await Ticket.updateMany(
+                        { assignees: assigneeId, projectId },
+                        ////pull removes the assigneeId from the array assignees of all documents that satisfy the search criteria.
+                        { $pull: { assignees: new mongoose.Types.ObjectId(assigneeId) } });
                     resolve();
                 } catch (error) {
                     reject(error);
@@ -184,7 +188,7 @@ export const deleteProject = async (req, res) => {
     const { projectId } = req.params;
 
     try {
-        //Get user permssion
+        //Get user permission
         const userId = req.user._id;
 
         //Authorize - ensure signed in user is the project author
@@ -207,12 +211,7 @@ export const deleteProject = async (req, res) => {
     }
 };
 
-/**
- * @description: Delete Project
- * @param {projectId} string 
- * 
- * @return status 200
- */
+
 export const getProjectStat = async (req, res) => {
     const { projectId } = req.params;
 
@@ -220,7 +219,7 @@ export const getProjectStat = async (req, res) => {
         //Get user permssion
         const userId = req.user._id;
 
-        //Ensure - ensure signed in belongs to the project
+        //Ensure - ensure signed in user belongs to the project
         const project = await Project.findOne({ _id: projectId, assignees: userId });
 
         if (!project) {
@@ -232,32 +231,39 @@ export const getProjectStat = async (req, res) => {
         const unassignedTicketCount = await Ticket.find({ projectId, assignees: [] }).count();
         const assignedTicketCount = ticketCount - unassignedTicketCount;
         const ticketStatusCount = await Ticket.aggregate([
-            { $match: { projectId: new mongoose.Types.ObjectId(projectId) } },
+            { $match:
+                    { //Converts projectId in an ObjectId of MongoDB, because the fields of type ObjectId must be compared as such and not as strings.
+                        projectId: new mongoose.Types.ObjectId(projectId) } },
             {
-                $group: { _id: "$status", value: { $sum: 1 } }
+                $group: {//group the documents by status
+                    _id: "$status",
+                    value: { $sum: 1 } //Calculates the number of documents in each group, adding 1 for every document that belongs to that group
+                }
             }
         ]);
         const ticketTypeCount = await Ticket.aggregate([
-            { $match: { projectId: new mongoose.Types.ObjectId(projectId) } },
+            { $match:
+                    { //Converts projectId in an ObjectId of MongoDB, because the fields of type ObjectId must be compared as such and not as strings.
+                        projectId: new mongoose.Types.ObjectId(projectId) } },
             {
-                $group: {
+                $group: {//group the documents by type
                     _id: "$type",
-                    value: { $sum: 1 },
+                    value: { $sum: 1 }
                 }
             },
             {
-                $lookup: {
-                    from: "tickettypes",
-                    localField: "_id",
-                    foreignField: "_id",
-                    as: "ticketTypeInfo"
+                $lookup: {//used to execute a join operation between 2 collections in MongoDB
+                    from: "tickettypes",         // Collection to join, in this case  "tickettypes"
+                    localField: "_id",           // Field from the current (source) collection to use for the join
+                    foreignField: "_id",         // Field in the target collection (tickettypes) to use for the join
+                    as: "ticketTypeInfo"         // Name of the array that will contain the merged results
                 }
             },
             {
-                $project: {
-                    ticketTypeInfo: { $arrayElemAt: ["$ticketTypeInfo", 0] },
-                    value: 1,
-                    _id: 0
+                $project: {//Used to edit the output document
+                    ticketTypeInfo: { $arrayElemAt: ["$ticketTypeInfo", 0] },//$arrayElemAt extracts the first element in the array
+                    value: 1, //Includes the value field in the results
+                    _id: 0 //Excludes the _id filed in the results
                 }
             }
 

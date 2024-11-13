@@ -1,6 +1,3 @@
-//Socket.io
-import { createServer } from 'http';
-import { Server } from 'socket.io';
 
 import express from 'express';
 import cors from 'cors';
@@ -15,32 +12,11 @@ import { handleError, routeNotFound, authMiddleware } from './middleware/middlew
 
 const app = express();
 
-const server = createServer(app);  // Create a HTTP server
-const io = new Server(server, {
-    cors: {
-        origin: "*",
-        methods: ["GET", "POST"]
-    }
-});
-
-// Socket.IO connection
-io.on('connection', (socket) => {
-    console.log('New client connected');
-
-    socket.on('disconnect', () => {
-        console.log('Client disconnected');
-    });
-
-    // Example of listening to and emitting messages
-    socket.on('message', (message) => {
-        io.emit('message', message);
-    });
-});
 
 //preconfigure express app
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(express.json()); //which allows parsing the request body in JSON format
+app.use(express.urlencoded({ extended: true })); //essential for accessing form fields
+app.use(cors()); // to enable Cross-Origin Resource Sharing requests
 
 //Middleware
 app.get("/", (_, res) => res.send("Welcome to TrackMaster API"));

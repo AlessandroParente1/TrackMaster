@@ -6,15 +6,20 @@ import { getUserRole } from "../util/utils.js";
 export const authMiddleware = async (req, res, next) => {
     //extracts the token from the x-access-token header of the incoming request
     const token = req.headers['x-access-token'];
+
+    //the token expiration is checked in the auth.controller.js file in the login function
+
     if (token) {
         //If a token is present, it is verified using jsonwebtoken's verify method
         jwt.verify(token, process.env.SECRET_KEY, (error, decoded) => {
             if (error) {
                 return res.status(500).json({ error });
             }
+
             //Check if the user exists
             User.findOne({ _id: decoded.id }).then((user) => {
-                if (user) {
+                if (user) {//If the user is found, the user data is added to the req object,
+                           // allowing subsequent middleware and controllers to access this information.
                     req.user = user.toJSON();
                     return next();
                 }

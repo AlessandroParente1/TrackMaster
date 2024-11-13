@@ -7,13 +7,8 @@ const Environment = {
     DEVELOPMENT: 'development',
 };
 
-export const SECRET_KEY = process.env.SECRET_KEY;
-export const JWT_TOKEN_EXPIRATION = process.env.JWT_TOKEN_EXPIRATION;
-
-
 export const PORT = process.env.PORT || 5000;
 export const isProduction = process.env.NODE_ENV === Environment.PRODUCTION || false;
-export const isDevelopment = process.env.NODE_ENV === Environment.DEVELOPMENT || true;
 
 
 const DEV_DB_NAME = "dev-bugtracker";

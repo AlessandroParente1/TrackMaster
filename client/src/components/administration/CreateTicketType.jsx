@@ -1,30 +1,9 @@
 import Link from "next/link";
-import {
-  Alert,
-  Button,
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Icon,
-  Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Text,
-  useDisclosure,
-} from "@chakra-ui/react";
+import {  Alert,  Button,  Flex,  FormControl,  FormErrorMessage,  FormLabel,  Icon,  Input,  Modal,  ModalBody,  ModalCloseButton,  ModalContent, ModalFooter,  ModalHeader,  ModalOverlay,  Text,  useDisclosure} from "@chakra-ui/react";
 import { Field, Formik } from "formik";
 import React, { useEffect, useRef, useState } from "react";
 import MiscellaneousService from "@/services/miscellaneous-service";
-import {
-  CreateTicketTypeData,
-  CreateTicketTypeSchema,
-} from "@/util/ValidationSchemas";
+import {  CreateTicketTypeData,  CreateTicketTypeSchema} from "@/util/ValidationSchemas";
 import AlertModal from "../others/AlertModal";
 import SearchBar from "../others/SearchBar";
 

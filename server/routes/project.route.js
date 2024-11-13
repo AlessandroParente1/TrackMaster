@@ -7,19 +7,37 @@ import { Permissions } from "../util/utils.js";
 const router = express.Router();
 
 router.get("/", getUserProjects);
-router.get("/stat/:projectId", [validateParamId("projectId")], getProjectStat);
-router.get("/:projectId", validateParamId("projectId"), getProjectInfo);
+
+router.get("/stat/:projectId",
+    [
+    validateParamId("projectId")
+    ],
+    getProjectStat);
+
+router.get("/:projectId",
+    validateParamId("projectId"),
+    getProjectInfo);
 
 router.post("/",
-    [checkUserPermissions("projects", Permissions.canManageProjects), validateResource(createProjectSchema)],
+    [
+        checkUserPermissions("projects", Permissions.canManageProjects),
+        validateResource(createProjectSchema)
+    ],
     addProject);
 
 router.patch("/:projectId",
-    [checkUserPermissions("projects", Permissions.canManageProjects), validateResource(createProjectSchema), validateParamId("projectId")],
+    [
+        checkUserPermissions("projects", Permissions.canManageProjects),
+        validateResource(createProjectSchema),
+        validateParamId("projectId")
+    ],
     updateProject);
 
 router.delete("/:projectId",
-    [checkUserPermissions("projects", Permissions.canManageProjects), validateParamId("projectId")],
+    [
+        checkUserPermissions("projects", Permissions.canManageProjects),
+        validateParamId("projectId")
+    ],
     deleteProject);
 
 export default router;

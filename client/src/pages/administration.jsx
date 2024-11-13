@@ -1,13 +1,5 @@
 import Head from "next/head";
-import {
-  Flex,
-  Heading,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-} from "@chakra-ui/react";
+import {Flex,  Heading,  Tab,  TabList,  TabPanel,  TabPanels,  Tabs} from "@chakra-ui/react";
 import ManageRoles from "@/components/administration/ManageRoles";
 import ManageTicketTypes from "@/components/administration/ManageTicketTypes";
 import ManageUsers from "@/components/administration/ManageUsers";

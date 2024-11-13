@@ -17,15 +17,25 @@ router.get("/:ticketId",
     getTicketInfo);
 
 router.post("/project/:projectId",
-    [validateResource(createTicketSchema), validateParamId("projectId")],
+    [
+        checkUserPermissions("tickets", Permissions.canManageTickets),
+        validateResource(createTicketSchema),
+        validateParamId("projectId")],
     createTicket);
 
 router.patch("/project/:projectId",
-    [checkUserPermissions("tickets", Permissions.canManageTickets), validateResource(createTicketSchema), validateParamId("projectId")],
+    [
+        checkUserPermissions("tickets", Permissions.canManageTickets),
+        validateResource(createTicketSchema),
+        validateParamId("projectId")
+    ],
     updateTicket);
 
 router.delete("/:ticketId",
-    [checkUserPermissions("tickets", Permissions.canManageTickets), validateParamId("ticketId")],
+    [
+        checkUserPermissions("tickets", Permissions.canManageTickets),
+        validateParamId("ticketId")
+    ],
     deleteTicket);
 
 export default router;

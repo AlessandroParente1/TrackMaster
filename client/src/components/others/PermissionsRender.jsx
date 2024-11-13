@@ -1,4 +1,4 @@
-import { usePermissions } from "../../hooks/usePermissions";
+import { usePermissions } from "@/hooks/usePermissions";
 
 // PermissionsRender component to conditionally render children based on permissions
 

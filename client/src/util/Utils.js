@@ -10,10 +10,11 @@ export const Permissions = {
     canManageAdminPage
 };
 
+//generates a list of <option> elements using the data passed in ticketTypes
 export const createTicketTypeSelectOptions = (ticketTypes) => {
     return ticketTypes.map((ticketType) => (
         <option key={ticketType._id} value={ticketType._id}>
-            {ticketType.name}
+            {ticketType.name}{/* Display ticketType.name as visible text between <option> tags.*/}
         </option>
     ));
 };
@@ -27,7 +28,7 @@ export const createTicketStatusSelectOptions = () => {
 };
 
 export const hexToRgb = (hex, opacity) => {
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 
     if (!result) {
         return `rgba(0, 0, 0, ${opacity})`;

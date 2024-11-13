@@ -1,20 +1,4 @@
-import {
-  Button,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-} from "@chakra-ui/react";
+import {  Button,  Modal,  ModalBody,  ModalCloseButton,  ModalContent,  ModalFooter,  ModalHeader,  ModalOverlay,  Table,  TableContainer, Tbody,  Td,  Th,  Thead,  Tr} from "@chakra-ui/react";
 import React from "react";
 import { DEMO_LOGIN_INFO } from "@/util/Constants";
 

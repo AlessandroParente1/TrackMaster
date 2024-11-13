@@ -1,44 +1,29 @@
-import {
-  Box,
-  Center,
-  Flex,
-  Heading,
-  Spinner,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import {
-  ArcElement,
-  Chart as ChartJS,
-  Colors,
-  Legend,
-  Tooltip,
-} from "chart.js";
+import {  Box,  Center,  Flex,  Heading,  Spinner,  useColorModeValue} from "@chakra-ui/react";
+import {  ArcElement,  Chart as ChartJS,  Colors,  Legend,  Tooltip,} from "chart.js";
 import React, { useEffect, useState } from "react";
 import { Pie } from "react-chartjs-2";
-import {
-  BsFillFileTextFill,
-  BsPersonCheckFill,
-  BsPersonFill,
-  BsQuestionLg,
-} from "react-icons/bs";
+import {  BsFillFileTextFill,  BsPersonCheckFill,  BsPersonFill,  BsQuestionLg} from "react-icons/bs";
 import ProjectService from "@/services/project-service";
 import useApi from "@/hooks/useApi";
 import { hexToRgb } from "@/util/Utils";
 import StatCard from "../others/StatCard";
 
-// Register Chart.js components
+// Register Chart.js components necessary for the graphs
 
 ChartJS.register(ArcElement, Tooltip, Legend, Colors);
 
 // Dashboard component to display project statistics and charts
 
 const Dashboard = ({ projectId }) => {
+  //stores key project statistics, such as ticket counts.
   const [projectStats, setProjectStats] = useState([]);
+
+  //contain the structured data needed to create pie charts on ticket types and statuses.
   const [ticketTypeChartData, setTicketTypeChartData] = useState(null);
   const [ticketStatusChartData, setTicketStatusChartData] = useState(null);
-  const iconColor = useColorModeValue("white", "white");
-  const projectStatsSWR = useApi(ProjectService.getProjectStats(projectId));
 
+  //define the icon color and background for various project statistics elements.
+  const iconColor = useColorModeValue("white", "white");
   const iconBackgroundColor = [
     "purple.300",
     "green.300",
@@ -46,6 +31,10 @@ const Dashboard = ({ projectId }) => {
     "blue.300",
   ];
 
+  //useApi calls the API via ProjectService.getProjectStats(projectId) to retrieve project statistics using the projectId parameter. projectStatsSWR manages the loading status and contains the received data.
+  const projectStatsSWR = useApi(ProjectService.getProjectStats(projectId));
+
+  //transforms statistics data (stat) into an array of objects containing name, icon, background, and value for each statistic (e.g. "Total Tickets", "My Tickets").
   const createStatInfo = (stat) => {
     return [
       {
@@ -79,6 +68,7 @@ const Dashboard = ({ projectId }) => {
     ];
   };
 
+  //generates data for a pie chart based on project ticket types:
   const createTicketTypeChartData = (stat) => {
     const data = {
       labels: [],
@@ -93,6 +83,8 @@ const Dashboard = ({ projectId }) => {
     };
 
     stat.ticketTypeCount.forEach((ticketTypeCountStat) => {
+
+      //pushes ticket type count and colour to the chart data
       data.datasets[0].data.push(ticketTypeCountStat.value);
 
       const ticketTypeInfo = ticketTypeCountStat.ticketTypeInfo;
@@ -106,6 +98,7 @@ const Dashboard = ({ projectId }) => {
     return data;
   };
 
+  //Generates data for a pie chart based on project ticket statuses
   const createTicketStatusChartData = (stat) => {
     const data = {
       labels: [],
@@ -123,8 +116,8 @@ const Dashboard = ({ projectId }) => {
       data.datasets[0].data.push(ticketStatus.value);
       data.labels.push(ticketStatus._id);
 
-      let backgroundColour = "";
-
+      let backgroundColour;
+      //Every ticket has a specific color
       switch (ticketStatus._id) {
         case "Open":
           backgroundColour = hexToRgb("#FBD38D", 1);
@@ -153,8 +146,14 @@ const Dashboard = ({ projectId }) => {
   // Update state when project stats are fetched
 
   useEffect(() => {
+
+    //if projectStatsSWR.data exists/is available
     if (projectStatsSWR.data) {
+
+      //updates projectStats with the data of createStatInfo
       setProjectStats(createStatInfo(projectStatsSWR.data));
+
+      //updates ticketTypeChartData and ticketStatusChartData  with the data for the cake charts
       setTicketTypeChartData(createTicketTypeChartData(projectStatsSWR.data));
       setTicketStatusChartData(
         createTicketStatusChartData(projectStatsSWR.data)

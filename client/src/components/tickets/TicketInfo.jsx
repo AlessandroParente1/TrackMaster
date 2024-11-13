@@ -32,6 +32,7 @@ const TicketInfo = ({
   const canManageTickets = usePermissions(Permissions.canManageTickets);
   const ticketTypesSWR = useApi(MiscellaneousService.getAllTicketType());
 
+  //Formik form for model handling
   return (
     <Formik
       initialValues={ticketInfo}

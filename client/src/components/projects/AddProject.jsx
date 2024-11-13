@@ -1,68 +1,51 @@
 import { useRouter } from "next/router";
-import {
-  Alert,
-  AlertIcon,
-  Box,
-  Button,
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  useDisclosure,
-} from "@chakra-ui/react";
+import {  Alert,  AlertIcon,  Box,  Button,  Flex,  FormControl,  FormErrorMessage,  FormLabel,  Input,  Modal,  ModalBody,  ModalCloseButton,  ModalContent,  ModalFooter,  ModalHeader,  ModalOverlay,  Tab,  TabList,  TabPanel,  TabPanels,  Tabs,  useDisclosure} from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import AuthService from "@/services/auth-service";
+import React, { useEffect, useRef, useState } from "react";
 import MiscellaneousService from "@/services/miscellaneous-service";
 import ProjectService from "@/services/project-service";
 import useApi from "@/hooks/useApi";
 import useAuthStore from "@/hooks/useAuth";
-import {
-  PROJECT_ASSIGNEES_COLUMNS,
-  USERS_COLUMNS,
-} from "@/util/TableDataDisplay";
-import {
-  CreateProjectData,
-  CreateProjectSchema,
-} from "@/util/ValidationSchemas";
+import {  PROJECT_ASSIGNEES_COLUMNS,  USERS_COLUMNS} from "@/util/TableDataDisplay";
+import {  CreateProjectData,  CreateProjectSchema} from "@/util/ValidationSchemas";
 import RichTextEditor from "../editor/RichTextEditor";
 import AlertModal from "../others/AlertModal";
 import Table from "../others/Table";
 
 const AddProject = ({ isOpen, onClose, projectInfo, mutateServer }) => {
-  // Hooks and state management
+  // retrieves the information of the authenticated user to verify the role and identify the author of the project.
   const useAuth = useAuthStore();
+
+  //checks if projectInfo is undefined, which indicates creating a new project, while a defined value indicates modifying an existing project.
   const isNewProject = projectInfo === undefined;
+
+  //makes a request to the API to obtain available users to assign to the project.
+  const allUsersSWR = useApi(MiscellaneousService.getUsers(), isOpen);
 
   const router = useRouter();
   const formRef = useRef();
   const deleteProjectDisclosure = useDisclosure();
 
+  //to handle any errors while creating or editing the project.
   const [error, setError] = useState("");
+
+  //contains the IDs of users assigned to the project.
   const [selectedAssigneeIds, setSelectedAssigneeIds] = useState([]);
+
+  //contains the description of the project
   const [projectDescription, setProjectDescription] = useState("");
   const [projectInfoData, setProjectInfoData] = useState(CreateProjectData);
+
+  //indicates whether the current user is the author of the project.
   const [isProjectAuthor, setIsProjectAuthor] = useState(isNewProject);
 
-  const allUsersSWR = useApi(MiscellaneousService.getUsers(), isOpen);
-
-  // Update local state when the modal opens or projectInfo changes
 
   useEffect(() => {
+
+    //When the modal is open (isOpen) and projectInfo is present, the useEffect hook initializes the project data
     if (isOpen && projectInfo) {
+
+      //populates ProjectInfoData with title and description
       setProjectInfoData({
         title: projectInfo.title,
         description: projectInfo.description,
@@ -71,18 +54,22 @@ const AddProject = ({ isOpen, onClose, projectInfo, mutateServer }) => {
 
       setProjectDescription(projectInfo.description);
 
+      //sets the assignees
       setSelectedAssigneeIds(
         projectInfo.assignees.map((assignee) => assignee._id)
       );
 
+      //updates isProjectAuthor to check if the current user is the author.
       setIsProjectAuthor(useAuth.userProfile?._id === projectInfo.authorId._id);
     }
   }, [isOpen]);
 
+  //updates selectedAssigneeIds based on the selected users.
   const onAssigneeClick = ({ selected }) => {
     setSelectedAssigneeIds(Object.keys(selected));
   };
 
+  //delete the existing project by calling mutateServer to update the server-side data and close the modal with onCloseModal.
   const onProjectDelete = async () => {
     try {
       await mutateServer(ProjectService.deleteProject(projectInfo._id));
@@ -94,6 +81,7 @@ const AddProject = ({ isOpen, onClose, projectInfo, mutateServer }) => {
     }
   };
 
+  //resets the local states when the modal is closed, restoring the initial values.
   const onCloseModal = () => {
     setError("");
     setProjectInfoData(CreateProjectData);
@@ -102,17 +90,21 @@ const AddProject = ({ isOpen, onClose, projectInfo, mutateServer }) => {
     onClose();
   };
 
+  //sends the form data to the API to create or update the project.
   const onHandleFormSubmit = async (data) => {
     try {
       const projectData = { ...data };
       projectData.assignees = selectedAssigneeIds;
       projectData.description = projectDescription;
 
-      let apiRequestInfo = {};
+      let apiRequestInfo;
 
+      //If this is a new project (isNewProject), create a project by calling ProjectService.createProject.
       if (isNewProject) {
         apiRequestInfo = ProjectService.createProject(projectData);
-      } else {
+      }
+      //update the existing project with ProjectService.updateProject.
+      else {
         projectData._id = projectInfo._id;
         apiRequestInfo = ProjectService.updateProject(
           projectData,
@@ -120,6 +112,7 @@ const AddProject = ({ isOpen, onClose, projectInfo, mutateServer }) => {
         );
       }
 
+      //Update the server-side data with mutateServer, thus closing the modal.
       await mutateServer(apiRequestInfo);
 
       onClose();

@@ -1,4 +1,3 @@
-import useAuthStore from "@/hooks/useAuth";
 
 const updateUserProfile = (data) => {
     return {

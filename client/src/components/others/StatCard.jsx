@@ -1,13 +1,4 @@
-import {
-  Card,
-  CardBody,
-  Center,
-  Icon,
-  Stat,
-  StatLabel,
-  StatNumber,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import {  Card,  CardBody,  Center,  Icon,  Stat,  StatLabel,  StatNumber,  useColorModeValue} from "@chakra-ui/react";
 import React from "react";
 
 const StatCard = ({ iconBackground, iconColor, icon, name, value }) => {

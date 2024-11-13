@@ -1,12 +1,5 @@
 import Image from "next/image";
-import {
-  Button,
-  Heading,
-  Icon,
-  Link,
-  VStack,
-  useDisclosure,
-} from "@chakra-ui/react";
+import {  Button,  Heading,  Icon,  Link,  VStack,  useDisclosure} from "@chakra-ui/react";
 import { AiFillGithub } from "react-icons/ai";
 import { Login } from "@/components/authentication/Login";
 import DemoLoginInfoModal from "@/components/others/DemoLoginInfoModal";

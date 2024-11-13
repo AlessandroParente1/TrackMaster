@@ -2,7 +2,7 @@ import { Button, Flex, Spacer, useDisclosure } from "@chakra-ui/react";
 import React, { useState } from "react";
 import MiscellaneousService from "@/services/miscellaneous-service";
 import useApi from "@/hooks/useApi";
-import { MANAGE_ROLES } from "../../util/TableDataDisplay";
+import { MANAGE_ROLES } from "@/util/TableDataDisplay";
 import Table from "../others/Table";
 import CreateRole from "./CreateRole";
 

@@ -16,21 +16,11 @@ export const getUserRole = async (roleId) => {
     }
 };
 
-
-export const canPerformAction = async (permissionCheck, user) => {
-    const roleId = user.roleId;
-    const roleObject = await getUserRole(roleId);
-
-    return permissionCheck(roleObject.permissions);
-};
-
 export const validateObjectId = (id, message, res) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(403).json({ message });
     }
 };
-
-
 
 const canManageTickets = (permissionsList) => permissionsList.includes(Constants.MANAGE_TICKET);
 // Returns true if `permissionsList` includes the `MANAGE_TICKET` permission from the constants.

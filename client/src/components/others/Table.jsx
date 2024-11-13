@@ -4,6 +4,7 @@ import React from "react";
 import { getFieldValue } from "@/util/GetObjectProperty";
 import SearchBar from "./SearchBar";
 
+//Table displays a table with search, selection and column customization capabilities
 const Table = ({
   tableData = [],
   columns,
@@ -19,11 +20,11 @@ const Table = ({
   disableCheckBox = false,
   isLoading = false,
 }) => {
-  // State to manage the data displayed in the table
+  // represents the data currently visible. It is initialized as an empty array and populated with tableData or the result of a search.
   const [dataSource, setDataSource] = useState([]);
-  // State to manage selected rows in the table
+  // object that keeps track of the selected rows (the row IDs are the keys).
   const [selectedRow, setSelectedRow] = useState({});
-  // State to manage searchable fields in the data
+  // array of fields on which the search can be applied.
   const [dataFields, setDataFields] = useState([]);
   // Style for the table grid
   const gridStyle = { minHeight: height };
@@ -41,6 +42,7 @@ const Table = ({
   };
 
   const handleSearchInputChange = ({ target: { value } }) => {
+
     const lowerSearchText = value.toLowerCase();
 
     // Filter data based on the search input
@@ -51,17 +53,17 @@ const Table = ({
         return value.toLowerCase().includes(lowerSearchText);
       });
     });
-
+    //updates dataSource with filtered results.
     setDataSource(newData);
   };
 
-  // useEffect to initialize searchable fields when component mounts
+  // Runs getDataSourceFields() on mount to populate dataFields with lookup fields.
 
   useEffect(() => {
     getDataSourceFields();
   }, []);
 
-  // useEffect to manage selected rows when selectedRowIds prop changes
+  // Whenever tableData changes, it updates the dataSource with the new data, ensuring that the table always displays the current data.
 
   useEffect(() => {
     if (tableData) {
@@ -73,11 +75,12 @@ const Table = ({
     if (selectedRowIds) {
       const selectedRowData = {};
 
+      //Transforms selectedRowIds into an object (selectedRowData) where each selected ID is mapped to true, synchronizing the selected rows of the table.
       selectedRowIds.forEach((id) => (selectedRowData[id] = true));
 
       setSelectedRow(selectedRowData);
     }
-  }, [selectedRowIds]);
+  }, [selectedRowIds]);// gets activated every time selectedRowIds changes
 
   return (
     <>

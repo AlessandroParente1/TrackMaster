@@ -13,11 +13,11 @@ const login = (data) => {
 
 
 const isAuthorized = () => {
-    const authStore = useAuthStore.getState();
+    const authStore = useAuthStore.getState(); //qui gli importa solo lo stato in cui si trova l'utente
 
     const token = authStore.accessToken;
 
-    if (authStore.accessToken === null || authStore.userProfile === null) {
+    if (token === null || authStore.userProfile === null) {//
         authStore.clear();
         return false;
     }

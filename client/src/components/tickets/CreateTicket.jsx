@@ -59,12 +59,14 @@ const CreateTicket = ({
   const formRef = useRef();
 
   useEffect(() => {
+    //Update the project status whenever data from projectSWR is updated.
     if (projectSWR.data) {
       setProject(projectSWR.data);
     }
   }, [projectSWR]);
 
   useEffect(() => {
+    //It is used to initialize the ticket data in the edit/create form when the modal is opened.
     if (isOpen && ticket) {
       const ticketCopy = { ...ticket };
 

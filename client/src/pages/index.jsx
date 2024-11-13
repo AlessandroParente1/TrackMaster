@@ -1,4 +1,4 @@
-import ViewAllProjects from "./projects";
+import ViewAllProjects from "client/src/pages/projects/index.jsx";
 
 const Root = () => {
   return <ViewAllProjects />;

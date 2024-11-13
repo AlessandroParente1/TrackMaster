@@ -1,5 +1,4 @@
 import Head from "next/head";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { Button, Flex, Heading, Spacer, useDisclosure } from "@chakra-ui/react";
 import PermissionsRender from "@/components/others/PermissionsRender";
@@ -7,16 +6,26 @@ import Table from "@/components/others/Table";
 import AddProject from "@/components/projects/AddProject";
 import ProjectService from "@/services/project-service";
 import useApi from "@/hooks/useApi";
-import { PROJECTS_COLUMNS } from "../../util/TableDataDisplay";
-import { Permissions } from "../../util/Utils";
+import { PROJECTS_COLUMNS } from "@/util/TableDataDisplay";
+import { Permissions } from "@/util/Utils";
 
 const ViewAllProjects = () => {
+  //A Next.js hook to access routing parameters and navigate between pages.
   const router = useRouter();
+
+  //A Chakra UI hook to manage the opening and closing of modals or panels.
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  //Custom hook to make API requests and handle response status.
   const projectsSWR = useApi(ProjectService.getMyProjects());
 
+  //This function is executed when a table row is clicked.  and
   const handleRowClick = (rowData) => {
+
+    //Takes the project ID from the row (rowData.data._id)
     const projectId = rowData.data._id;
+
+    //uses router.push to navigate to that specific project's page
     router.push(`/projects/${projectId}`);
   };
 
@@ -30,6 +39,8 @@ const ViewAllProjects = () => {
           Projects
         </Heading>
         <Spacer />
+          {/*The "Add Project" button is only shown if the user has permission to manage projects,
+          thanks to the PermissionsRender component that checks permissions through Permissions.canManageProjects.*/}
         <PermissionsRender permissionCheck={Permissions.canManageProjects}>
           <Button
             colorScheme="blue"

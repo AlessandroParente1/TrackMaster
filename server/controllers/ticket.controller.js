@@ -10,6 +10,7 @@ export const getUserTickets = async (req, res) => {
 
         const tickets = await Ticket.find({ assignees: userId })
             .populate({ path: "projectId", select: { title: 1 } })
+            //__v tracks the version of the document (used by MongoDB)
             .populate({ path: "type", select: { __v: 0 } })
             .populate({ path: "createdBy", select: { firstName: 1, lastName: 1 } })
             .populate({ path: "assignees", select: { firstName: 1, lastName: 1 } });
@@ -156,7 +157,7 @@ export const deleteTicket = async (req, res) => {
 
     try {
         const result = await Ticket.deleteOne({ _id: ticketId });
-
+        //If deletedCount is 0, it means that no document with that ID was found and therefore no deletion occurred.
         if (result.deletedCount === 0) {
             return res.status(403).json({ message: "Ticket does not exist" });
         }

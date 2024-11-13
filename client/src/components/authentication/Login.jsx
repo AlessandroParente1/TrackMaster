@@ -1,13 +1,5 @@
 import { useRouter } from "next/router";
-import {
-  Alert,
-  Box,
-  Button,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
-} from "@chakra-ui/react";
+import {  Alert,  Box,  Button,  FormControl,  FormErrorMessage,  FormLabel,  Input} from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import { useEffect, useState } from "react";
 import AuthService from "@/services/auth-service";
@@ -15,11 +7,13 @@ import useApi from "@/hooks/useApi";
 import useAuthStore from "@/hooks/useAuth";
 import { LoginData, LoginSchema } from "@/util/ValidationSchemas";
 
+//Login coordinates sending credentials, handling load status, handling errors, and updating the authentication context if login is successful.
 export const Login = () => {
   // State to manage error messages
   const [error, seterror] = useState("");
   // State to manage the loading state during login
   const [isLogging, setisLogging] = useState(false);
+
   // Hook to manage routing in Next.js
   const router = useRouter();
   // Custom hook to manage API calls
@@ -27,21 +21,34 @@ export const Login = () => {
   // Custom hook to access authentication store
   const authStore = useAuthStore();
 
+  //Login result handling
   useEffect(() => {
+
+    // If login data is not null, set the access token and user profile in authStore
     if (loginSWR.data) {
       authStore.setAccessToken(loginSWR.data.accessToken);
       authStore.setUserProfile(loginSWR.data.userProfile);
+
+      // Reload the page to update the authentication state
       router.reload();
     }
   }, [loginSWR.data]);
 
+  //When the user submits the form
   const onHandleFormSubmit = async (values) => {
+
+    //The error gets resetted
     seterror("");
+    //The loading state is set
     setisLogging(true);
 
     try {
+      //The mutateServer function of loginSWR sends the authentication request with the user data.
       await loginSWR.mutateServer(AuthService.login(values));
-    } catch (error) {
+    }
+    //if the authentication fails
+    catch (error) {
+      //The error message is set
       seterror(error);
     }
     setisLogging(false);
@@ -53,7 +60,6 @@ export const Login = () => {
       p={[8, 10]}
       mt={[10]}
       mx="auto"
-      background="secondary"
       borderRadius={10}
       boxShadow="md"
     >

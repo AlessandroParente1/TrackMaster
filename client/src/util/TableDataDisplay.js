@@ -7,7 +7,6 @@ import { getUserFullname } from "./Utils";
 
 const styles = {
     fontWeight: "500",
-    // color: "#CBD5E0",
     cursor: "pointer",
 };
 
@@ -353,18 +352,3 @@ export const MANAGE_TICKET_TYPES_COLUMNS = [
     }
 ];
 
-export const ICONS_COLUMNS = [
-    {
-        name: "icon",
-        header: "ICON",
-        headerEllipsis: false,
-        width: 55,
-    },
-    {
-        name: "name",
-        header: "NAME",
-        searchInField: ["name"],
-        flex: 1,
-        render: ({ value }) => <span style={styles}>{value}</span>
-    }
-];

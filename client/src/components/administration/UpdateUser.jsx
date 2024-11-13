@@ -1,61 +1,43 @@
-import {
-  Alert,
-  Button,
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Select,
-  Tooltip,
-  useBoolean,
-} from "@chakra-ui/react";
+import {  Alert,  Button,  Flex,  FormControl,  FormErrorMessage,  FormLabel,  Input,  InputGroup,  InputRightElement,  Modal,  ModalBody,  ModalCloseButton,  ModalContent,  ModalFooter,  ModalHeader,  ModalOverlay,  Select,  Tooltip,  useBoolean} from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import React, { useEffect, useRef, useState } from "react";
 import MiscellaneousService from "@/services/miscellaneous-service";
 import useApi from "@/hooks/useApi";
-import {
-  ManageUserSchema,
-  SignUpData,
-  SignupSchema,
-} from "@/util/ValidationSchemas";
+import {  ManageUserSchema,  SignUpData,  SignupSchema} from "@/util/ValidationSchemas";
 
+
+//manages the logic for updating, creating, and displaying a user's information
 const UpdateUser = ({
   isOpen,
   closeModal,
   viewUser,
   isUpdateMyProfile = false,
-  mutateServer,
+  mutateServer, //Function to perform the operation on the server (e.g. send the update or user creation request).
 }) => {
-  // Fetch all roles using SWR (stale-while-revalidate) hook
+  // Use the useApi hook to retrieve all roles from a remote service. SWR (stale-while-revalidate) is used for loading data in a responsive and optimized manner.
   const allRolesSWR = useApi(MiscellaneousService.getRoles());
+
   // Reference to the form, used for programmatically submitting the form
   const formRef = useRef(null);
+
   // State to handle any errors during form submission or API calls
   const [error, setError] = useState(null);
+
   // State to manage user information being edited or created
   const [userInfo, setUserInfo] = useState(SignUpData);
+
   // Boolean to toggle password visibility
   const [showPassword, setShowPassword] = useBoolean();
+
   // Boolean to determine if the current operation is updating a user's profile
   const isUpdatingUserProfile = !isUpdateMyProfile && viewUser;
 
   // Set the modal title based on the operation (view, update, or create)
-
   const modalTitle = isUpdateMyProfile
-    ? "My Profile"
+    ? "My Profile" //If isUpdateMyProfile is true, the title is "My Profile".
     : viewUser
-    ? "Update User"
-    : "Create User";
+    ? "Update User"//If there is a user to view (viewUser), the title is "Update User".
+    : "Create User";//If neither of the two previous conditions are met, the title will be "Create User", which is the case of creating a new user.
 
   // Effect hook to populate the form with user data when the modal opens
 
@@ -69,6 +51,7 @@ const UpdateUser = ({
         email: viewUser.email,
       };
 
+      //and the user is updating their profile (isUpdateMyProfile), passwords are left blank.
       if (isUpdateMyProfile) {
         userInfoCopy.password = "";
         userInfoCopy.confirmPassword = "";
@@ -78,21 +61,29 @@ const UpdateUser = ({
     }
   }, [isOpen]);
 
+  //This function is called when the form is submitted.
   const onUpdateUser = async (data) => {
     try {
       let apiRequestInfo;
 
+      //If viewUser is defined, the existing user is updated.
       if (viewUser) {
         // Update user profile or current user's profile
 
         apiRequestInfo = isUpdateMyProfile
-          ? MiscellaneousService.updateMyProfile(data)
+            //If isUpdateMyProfile is true, the operation is to update the current user's profile, so MiscellaneousService.updateMyProfile(data) is called
+            ? MiscellaneousService.updateMyProfile(data)
+
+            //Otherwise, MiscellaneousService.updateUserProfile(data) is called to update another user.
           : MiscellaneousService.updateUserProfile(data);
-      } else {
+      }
+      //If viewUser is not defined (you are creating a new user), MiscellaneousService.createUser(data) is called.
+      else {
         apiRequestInfo = MiscellaneousService.createUser(data);
       }
       // Create a new user
 
+        //After the operation is performed, mutateServer is called to update the UI.
       await mutateServer(apiRequestInfo);
 
       setError("");
@@ -103,6 +94,7 @@ const UpdateUser = ({
     }
   };
 
+  //Resets the state to null for accessToken and userProfile, essentially "logging out" the user.
   const onCloseModal = () => {
     setShowPassword.off();
     setUserInfo(SignUpData);
@@ -110,10 +102,12 @@ const UpdateUser = ({
     closeModal();
   };
 
-  // Function to create the options for the role selection dropdown
+  // Function to create the options for the role selection dropdown (menù a discesa)
 
   const createRoleTypeOption = () => {
+    //By using the data fetched from allRolesSWR, a list of <option> elements is generated
     return allRolesSWR.data?.map((role) => (
+        //Every role gets represented by an option
       <option key={role._id} value={role._id}>
         {role.name}
       </option>

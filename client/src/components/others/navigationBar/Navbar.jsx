@@ -1,17 +1,6 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
-import {
-  Avatar,
-  Divider,
-  Flex,
-  Heading,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Text,
-  useDisclosure,
-} from "@chakra-ui/react";
+import {  Avatar,  Divider,  Flex,  Heading,  Menu,  MenuButton,  MenuItem,  MenuList,  Text,  useDisclosure} from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { FiFileText, FiLayers, FiUser } from "react-icons/fi";
 import useApi from "@/hooks/useApi";
@@ -66,7 +55,7 @@ const Navbar = () => {
   };
 
   const onLogout = () => {
-    useAuth.clear();
+    //useAuth.clear();
     router.reload();
   };
 
@@ -78,7 +67,6 @@ const Navbar = () => {
         direction="column"
         justifyContent="space-between"
         w={navSize === "small" ? "75px" : "250px"}
-        background="secondary"
         boxShadow="xl"
       >
         <Flex

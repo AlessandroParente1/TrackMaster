@@ -6,24 +6,28 @@ import useApi from "@/hooks/useApi";
 import Table from "../components/others/Table";
 import CreateTicket from "../components/tickets/CreateTicket";
 import TicketService from "../services/ticket-service";
-import {
-  MY_TICKETS_COLUMNS,
-  TICKETS_DEFAULT_SORT,
-} from "../util/TableDataDisplay";
+import {MY_TICKETS_COLUMNS,TICKETS_DEFAULT_SORT} from "@/util/TableDataDisplay";
 
 const Tickets = () => {
-  const myTicketsSWR = useApi(TicketService.getUserTickets());
+  //myTicketsSWR uses the useApi hook to retrieve the user's ticket data by making a request to TicketService.getUserTickets()
+    const myTicketsSWR = useApi(TicketService.getUserTickets());
 
+    //viewTicket: Tracks the ticket selected for viewing in the modal
   const [viewTicket, setViewTicket] = useState(null);
+  //useDisclosure: It is a Chakra UI hook to manage the opening and closing of the modal
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const onTicketClick = (rowProps, _) => {
+    //rowProps.data contains the selected ticket data, which is stored in viewTicket
     setViewTicket(rowProps.data);
+    //the modal opens up thanks to onOpen()
     onOpen();
   };
 
   const onModalClose = () => {
+    //When the modal closes, viewTicket is reset to null
     setViewTicket(null);
+    //onClose() closes the modal
     onClose();
   };
 
