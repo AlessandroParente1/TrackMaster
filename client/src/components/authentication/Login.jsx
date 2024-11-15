@@ -44,6 +44,7 @@ export const Login = () => {
 
     try {
       //The mutateServer function of loginSWR sends the authentication request with the user data.
+      //mutateServer is used to update the UI immediately (optimistic modification) without waiting for the server response
       await loginSWR.mutateServer(AuthService.login(values));
     }
     //if the authentication fails

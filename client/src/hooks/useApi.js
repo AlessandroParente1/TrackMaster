@@ -53,11 +53,18 @@ const useApi = (apiRequestInfo, shouldFetch = true, revalidateIfStale = true) =>
     });
 
     //Note 1
+    //function that implements a flow of mutations of the client data using SWR
     const mutateServer = async (mutationApiRequestInfo) => {
         try {
             //swr.mutate to update the data in useSWR without making a new request to the server.
             //It uses getMutation and getMutationOptions to define the optimistic data to show while it's waiting for the mutation
-            await swr.mutate(getMutation(mutationApiRequestInfo, swr.data), getMutationOptions(mutationApiRequestInfo, swr.data));
+            await swr.mutate(
+
+                //function that gets the optimistic data
+                getMutation(mutationApiRequestInfo, swr.data),
+
+                //function that defines some advanced options
+                getMutationOptions(mutationApiRequestInfo, swr.data));
             //getMutation and getMutationOptions are defined below
 
         } catch (error) {

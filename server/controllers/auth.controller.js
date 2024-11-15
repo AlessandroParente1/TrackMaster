@@ -9,7 +9,8 @@ export const login = async (req, res) => {
         //performs a database query using Mongoose:
         //findOne looks in the User collection for a document where the email field matches the provided email,
         //.populate("roleId") replaces the roleId field in the User document with the full document it references in the Role collection
-        //Instead of returning just the ID of the role, populate fetches and includes the full role document, making it easier to access detailed information about the user’s role.
+        //Instead of returning just the ID of the role, populate fetches and includes the full role document,
+        // making it easier to access detailed information about the user’s role.
         const existingUser = await User.findOne({ email }).populate("roleId");
 
         if (!existingUser) {
