@@ -29,10 +29,20 @@ const Table = ({
   // Style for the table grid
   const gridStyle = { minHeight: height };
 
+  // Collects the fields (keys) within the table data that should be searched.
+  // These fields are later used by handleSearchInputChange to filter data based on the user's search input.
   const getDataSourceFields = () => {
+
+    //The fields are defined in the column configuration,
+    // specifically in the searchInField property of each column
     const result = [];
 
     columns.forEach((column) => {
+
+      // If the column has the searchInField property defined,
+      // add its values (the fields to search) to the result array.
+      // This property is used once during the component mounting
+      // to define which fields (dataFields) should be searchable.
       if (column.searchInField) {
         result.push(...column.searchInField);
       }
@@ -40,16 +50,21 @@ const Table = ({
 
     setDataFields(result);
   };
-
+//Note 2
+  //It is called every time the user types in the search bar.
   const handleSearchInputChange = ({ target: { value } }) => {
 
     const lowerSearchText = value.toLowerCase();
 
-    // Filter data based on the search input
+    // Filters tableData data based on the search input
 
     const newData = tableData.filter((data) => {
+      //The dataFields.some function checks whether at least one
+      // of the fields defined in dataFields contains the searched text(key)
       return dataFields.some((key) => {
         const value = getFieldValue(data, key);
+
+        //checks if the value obtained includes the searched text.
         return value.toLowerCase().includes(lowerSearchText);
       });
     });
@@ -57,7 +72,7 @@ const Table = ({
     setDataSource(newData);
   };
 
-  // Runs getDataSourceFields() on mount to populate dataFields with lookup fields.
+  // Runs getDataSourceFields() on mount of the component to populate dataFields with search fields.
 
   useEffect(() => {
     getDataSourceFields();
@@ -75,6 +90,7 @@ const Table = ({
     if (selectedRowIds) {
       const selectedRowData = {};
 
+      //Transforms selectedRowIds into an object (selectedRowData) where each selected ID is mapped to true, synchronizing the selected rows of the table.
       selectedRowIds.forEach((id) => (selectedRowData[id] = true));
 
       setSelectedRow(selectedRowData);
@@ -83,6 +99,7 @@ const Table = ({
 
   return (
     <>
+      {/*responsible for rendering the search input field.*/}
       <SearchBar
         placeholder={searchPlaceholder}
         handleSearchInputChange={handleSearchInputChange}
@@ -92,6 +109,10 @@ const Table = ({
         idProperty="_id"
         style={gridStyle}
         theme="default-dark"
+
+        //data source is the source of data
+        //then when dataSource is updated (for example, during a search),
+        // the table automatically updates to show only matching results.
         dataSource={dataSource}
         columns={columns}
         defaultSortInfo={defaultSortInfo}

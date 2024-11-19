@@ -31,7 +31,7 @@ const isAuthorized = () => {
         //Decodes the token
         const decodeToken = decode(token);
 
-        //Check if the token has expired by comparing the expiration time (exp) with the current timestamp.
+        //
         if (decodeToken.exp * 1000 < new Date().getTime()) {
             authStore.clear();
             return false;
