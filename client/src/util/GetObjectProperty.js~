@@ -5,6 +5,8 @@ export const getFieldValue = (object, key) => {
     let value = object;
 
     keys.forEach(nestedKey => {
+        //Iterates over each key in the array and accesses the corresponding property in value,
+        // updating value as you go down the levels of the object.
         value = value[nestedKey];
     });
 

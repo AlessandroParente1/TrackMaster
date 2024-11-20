@@ -48,11 +48,15 @@ const Table = ({
       }
     });
 
+    // Update the state to store the searchable fields,
+    // so they can be accessed later by handleSearchInputChange.
     setDataFields(result);
   };
 //Note 2
   //It is called every time the user types in the search bar.
   const handleSearchInputChange = ({ target: { value } }) => {
+
+    //The value property is taken from the event's target object (event.target.value).
 
     const lowerSearchText = value.toLowerCase();
 

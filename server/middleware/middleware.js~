@@ -37,7 +37,6 @@ export const authMiddleware = async (req, res, next) => {
         });
     }
     else {
-        //If the token is not present, the user is not authenticated
         console.log("authMiddleware issue");
         return res.sendStatus(403);
     }

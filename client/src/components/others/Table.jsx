@@ -56,6 +56,8 @@ const Table = ({
   //It is called every time the user types in the search bar.
   const handleSearchInputChange = ({ target: { value } }) => {
 
+    //The value property is taken from the event's target object (event.target.value).
+
     const lowerSearchText = value.toLowerCase();
 
     // Filters tableData data based on the search input
@@ -64,6 +66,9 @@ const Table = ({
       //The dataFields.some function checks whether at least one
       // of the fields defined in dataFields contains the searched text(key)
       return dataFields.some((key) => {
+
+        //Extracts the value associated with the specified key for each data element (representing an object in the table).
+        // If the fields are nested (e.g. user.name), this function navigates the object to get the correct value.
         const value = getFieldValue(data, key);
 
         //checks if the value obtained includes the searched text.

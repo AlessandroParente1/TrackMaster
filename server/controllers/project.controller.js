@@ -68,9 +68,11 @@ export const getUserProjects = async (req, res) => {
     try {
         const userId = req.user._id;
 
-        // * Get all the user's projects
-        // ? To find documents with array that contains specific value, you can simply do "assignees: userId", it will return all documents with array containing userId
+        //The Project model is queried to find all documents where the assignees field contains the user ID (userId).
+        //Only projects where the user is present in assignees are returned.
+
         const projects = await Project.find({ assignees: userId })
+            //The populate function is used to include the project creator's firstName and lastName fields (authorId),
             .populate({ path: "authorId", select: ["firstName", "lastName"] });
 
         return res.json(projects);

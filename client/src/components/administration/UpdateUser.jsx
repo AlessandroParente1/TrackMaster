@@ -61,7 +61,7 @@ const UpdateUser = ({
     }
   }, [isOpen]);
 
-  //This function is called when the form is submitted.
+  //This function is called when the form is submitted. (to update or create a user)
   const onUpdateUser = async (data) => {
     try {
       let apiRequestInfo;
@@ -71,7 +71,8 @@ const UpdateUser = ({
         // Update user profile or current user's profile
 
         apiRequestInfo = isUpdateMyProfile
-            //If isUpdateMyProfile is true, the operation is to update the current user's profile, so MiscellaneousService.updateMyProfile(data) is called
+            //If isUpdateMyProfile is true, the operation is to update the current user's profile,
+            // so MiscellaneousService.updateMyProfile(data) is called
             ? MiscellaneousService.updateMyProfile(data)
 
             //Otherwise, MiscellaneousService.updateUserProfile(data) is called to update another user.

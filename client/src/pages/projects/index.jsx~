@@ -39,6 +39,9 @@ const ViewAllProjects = () => {
           Projects
         </Heading>
         <Spacer />
+          {/*The "Add Project" button is only shown if the user has permission to manage projects,
+          thanks to the PermissionsRender component that checks permissions through Permissions.canManageProjects.
+          The backend request is done in AddProject in HandleFormSubmit*/}
         <PermissionsRender permissionCheck={Permissions.canManageProjects}>
           <Button
             colorScheme="blue"
@@ -61,6 +64,7 @@ const ViewAllProjects = () => {
         isLoading={projectsSWR.isLoading}
       />
 
+        {/*The component opens only when the button is clicked, thanks to state management via the Chakra UI useDisclosure hook*/}
       <AddProject
         isOpen={isOpen}
         onClose={onClose}

@@ -103,7 +103,7 @@ const UpdateUser = ({
   };
 
   // Function to create the options for the role selection dropdown (menù a discesa)
-  
+
   const createRoleTypeOption = () => {
     //By using the data fetched from allRolesSWR, a list of <option> elements is generated
     return allRolesSWR.data?.map((role) => (

@@ -169,7 +169,7 @@ const AddProject = ({ isOpen, onClose, projectInfo, mutateServer }) => {
                             >
                               <FormLabel>Title</FormLabel>
                               {/*Input fields and the RichTextEditor are disabled for unauthorized users
-                              backend side control is done thanks to onHandleFormSubmit (above)*/}
+                              */}
                               <Field
                                 as={Input}
                                 name="title"
@@ -228,8 +228,7 @@ const AddProject = ({ isOpen, onClose, projectInfo, mutateServer }) => {
             </Button>
           ) : null}
 
-          {/*The button to save changes or create a project is shown only if isProjectAuthor is true
-          backend side control is done thanks to onHandleFormSubmit (above)*/}
+          {/*The button to save changes or create a project is shown only if isProjectAuthor is true*/}
           {isProjectAuthor ? (
             <Button
               colorScheme="blue"

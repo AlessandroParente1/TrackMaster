@@ -26,6 +26,6 @@ const SearchBar = ({ placeholder, handleSearchInputChange }) => {
   );
 };
 
-// Memoize the component to prevent unnecessary re-renders
+// Memorize the component to prevent unnecessary re-renders
 
 export default React.memo(SearchBar);

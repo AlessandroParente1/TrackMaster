@@ -7,7 +7,8 @@ import useApi from "@/hooks/useApi";
 import useAuthStore from "@/hooks/useAuth";
 import { LoginData, LoginSchema } from "@/util/ValidationSchemas";
 
-//Login coordinates sending credentials, handling load status, handling errors, and updating the authentication context if login is successful.
+//Login coordinates sending credentials, handling load status, handling errors,
+// and updating the authentication context if login is successful.
 export const Login = () => {
   // State to manage error messages
   const [error, seterror] = useState("");
